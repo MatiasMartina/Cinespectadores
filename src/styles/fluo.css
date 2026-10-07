@@ -1,0 +1,80 @@
+/* Acentos compartidos. Los colores de las butacas conservan su significado. */
+app-root
+  .marco-aplicacion
+  :is(.panel, .resumen-candy, .productos-candy, .formulario-pago, .bloque-resumen) {
+  border-color: rgb(252 1 118 / 26%);
+}
+
+app-root .marco-aplicacion app-navbar .navbar {
+  border-color: rgb(252 1 118 / 36%);
+  box-shadow: 0 4px 18px rgb(252 1 118 / 8%);
+}
+
+app-root .marco-aplicacion app-navbar .logo-icono {
+  color: var(--rosa);
+  background: rgb(252 1 118 / 12%);
+}
+
+app-root .marco-aplicacion app-navbar .enlaces a.enlace-activo {
+  color: var(--celeste);
+  background: rgb(0 229 255 / 9%);
+  box-shadow:
+    inset 0 -2px var(--celeste),
+    0 0 12px rgb(0 229 255 / 9%);
+}
+
+app-root .marco-aplicacion :is(.primario, .boton-pagar, .boton-cuenta) {
+  background: var(--rosa);
+  color: #0b0714;
+  border-color: var(--rosa);
+  font-weight: 800;
+}
+
+app-root
+  .marco-aplicacion
+  :is(button, a[class*='boton'], .enlaces a, .opciones-usuario a):not(app-mapa-butacas *) {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+@media (hover: hover) {
+  app-root
+    .marco-aplicacion
+    :is(button, a[class*='boton'], .enlaces a, .opciones-usuario a):not(:disabled):not(
+      [aria-disabled='true']
+    ):not(app-mapa-butacas *):hover {
+    border-color: var(--rosa);
+    box-shadow:
+      0 0 0 1px rgb(252 1 118 / 45%),
+      0 0 16px rgb(252 1 118 / 24%);
+  }
+}
+
+app-root .marco-aplicacion :is(button, a, input, select, textarea):focus-visible {
+  outline-color: var(--rosa);
+}
+
+app-root
+  .marco-aplicacion
+  .contenido-aplicacion
+  :is(input, select, textarea):not([type='checkbox']):focus {
+  outline-color: var(--rosa);
+  border-color: var(--rosa);
+  box-shadow: 0 0 0 3px rgb(252 1 118 / 12%);
+}
+
+app-root .marco-aplicacion .puesto-top {
+  color: var(--lima);
+  border-color: rgb(183 255 54 / 45%);
+  background: rgb(183 255 54 / 10%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  app-root
+    .marco-aplicacion
+    :is(button, a[class*='boton'], .enlaces a, .opciones-usuario a):not(app-mapa-butacas *) {
+    transition: none;
+  }
+}

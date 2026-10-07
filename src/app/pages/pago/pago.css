@@ -1,0 +1,544 @@
+:host {
+  display: block;
+}
+main {
+  width: min(1640px, calc(100% - 40px));
+  margin: 20px auto 28px;
+}
+.pago {
+  width: 100%;
+}
+.pago-encabezado {
+  position: relative;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.pago-encabezado h1 {
+  margin: 5px 0 7px;
+  font-size: clamp(1.5rem, 2.3vw, 2rem);
+}
+.pago-encabezado p {
+  margin: 4px 0;
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+}
+.pago-etiqueta {
+  color: var(--celeste) !important;
+  font-size: 0.7rem !important;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.pago-encabezado .boton-volver {
+  position: absolute;
+  left: 0;
+  top: 12px;
+  margin: 0;
+}
+.boton-volver::before {
+  content: '←';
+}
+.pago-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.formulario-pago {
+  display: contents;
+}
+.panel-pago {
+  display: flex;
+  flex-direction: column;
+  height: clamp(500px, calc(100dvh - 235px), 730px);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #8b5cf647;
+  border-radius: 18px;
+  background: var(--fondo-caja);
+}
+.panel-pago > h2 {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 17px 16px;
+  border-bottom: 1px solid #8b5cf630;
+  font-size: 1.1rem;
+}
+.contenido-pago {
+  flex: 1;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #715090 transparent;
+  scrollbar-gutter: stable;
+}
+.beneficios-compra {
+  min-width: 0;
+  margin: 0 0 15px;
+  padding: 12px;
+  border: 1px solid #8b5cf63d;
+  border-radius: 12px;
+  background: #8b5cf608;
+}
+.beneficios-compra:last-child {
+  margin-bottom: 0;
+}
+.beneficios-compra legend {
+  padding: 0 6px;
+  color: #e9ddff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.beneficios-compra p {
+  margin: 0 0 10px;
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+.seleccion-combo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 78px;
+  gap: 10px;
+}
+.campo-beneficio,
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+label {
+  color: #ede7ff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+input,
+select {
+  min-width: 0;
+  width: 100%;
+  height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #8b5cf64d;
+  border-radius: 9px;
+  background: var(--fondo-input);
+  color: var(--texto-principal);
+  font-size: 0.87rem;
+}
+input::placeholder {
+  color: #a89ebd;
+}
+input:disabled,
+select:disabled {
+  opacity: 0.55;
+}
+select {
+  text-overflow: ellipsis;
+}
+.lista-recompensas {
+  display: grid;
+  gap: 8px;
+}
+.recompensa-canje {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  background: #0b071455;
+  border: 1px solid #8b5cf628;
+}
+.recompensa-canje label {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
+}
+.recompensa-canje small {
+  display: block;
+  margin-top: 4px;
+  color: var(--texto-secundario);
+  font-size: 0.73rem;
+  font-weight: 400;
+}
+.cantidad-canje {
+  flex: 0 0 70px;
+}
+.cantidad-canje > span {
+  display: block;
+  margin-bottom: 4px;
+  color: #bcb0d3;
+  text-align: center;
+  font-size: 0.65rem;
+}
+.cantidad-canje input {
+  height: 36px;
+  text-align: center;
+}
+.beneficios-compra .ayuda-gestion {
+  margin: 10px 0 0;
+  font-size: 0.72rem;
+}
+.opcion-credito {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+.opcion-credito input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--violeta);
+}
+.datos-pago {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.campo-completo {
+  grid-column: 1 / -1;
+}
+.boton-datos-prueba {
+  min-height: 36px;
+  margin: 0 0 9px;
+  padding: 8px 12px;
+  border: 1px solid #8b5cf665;
+  border-radius: 9px;
+  background: #8b5cf617;
+  color: #e9ddff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.boton-datos-prueba:hover {
+  background: #8b5cf632;
+}
+.cupon-controles {
+  display: flex;
+  gap: 8px;
+}
+.cupon-controles input {
+  flex: 1;
+}
+.boton-aplicar-cupon {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid #8b5cf65c;
+  border-radius: 9px;
+  background: #8b5cf625;
+  color: #f5f3ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.reserva-error-pago {
+  height: 30px;
+  overflow: auto;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: #fda4af;
+}
+.reserva-error-pago small {
+  font-size: inherit;
+}
+.reserva-mensaje-cupon {
+  height: 36px;
+  overflow: auto;
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+.mensaje-cupon {
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+.cupon-valido {
+  color: #86efac;
+}
+.cupon-error {
+  color: #fda4af;
+}
+.enlace-iniciar-sesion {
+  margin: 0 0 12px;
+  color: var(--celeste);
+  font-size: 0.78rem;
+}
+.aviso-credito,
+.aviso-preventa {
+  padding: 12px;
+  border: 1px solid #22d3ee44;
+  border-radius: 10px;
+  background: #22d3ee0c;
+  color: #bae6fd;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+.detalle-compra-pago {
+  padding-bottom: 13px;
+  border-bottom: 1px solid #8b5cf630;
+}
+.detalle-compra-pago h3 {
+  font-size: 1.1rem;
+  margin: 0 0 10px;
+}
+.detalle-compra-pago p {
+  margin: 5px 0;
+  color: var(--texto-secundario);
+  font-size: 0.83rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+.resumen-pago {
+  margin-top: 12px;
+}
+.conceptos-compra {
+  padding-bottom: 9px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #8b5cf630;
+}
+.conceptos-compra .fila-pago {
+  padding: 7px 0;
+  font-size: 0.81rem;
+}
+.fila-pago {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  color: var(--texto-secundario);
+  font-size: 0.88rem;
+}
+.fila-pago span {
+  min-width: 0;
+}
+.fila-pago strong {
+  color: #f5f3ff;
+  white-space: nowrap;
+}
+.descuento-pago,
+.descuento-pago strong {
+  color: #86efac;
+}
+.total-pago {
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid #8b5cf63d;
+  font-weight: 700;
+}
+.total-pago strong {
+  color: var(--celeste);
+  font-size: 1.65rem;
+}
+.resumen-pendiente {
+  color: var(--texto-secundario);
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+.confirmar-pago {
+  flex: 0 0 auto;
+  padding: 10px 16px 16px;
+  border-top: 1px solid #8b5cf630;
+}
+.mensaje-pago-reservado {
+  height: 42px;
+  margin: 0 0 7px;
+  overflow: auto;
+  line-height: 1.35;
+}
+.boton-pagar,
+.boton-cancelar-pago {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  cursor: pointer;
+}
+.boton-pagar {
+  gap: 12px;
+  min-height: 46px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(110deg, #7c3aed, #a83abd);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.boton-pagar:disabled {
+  background: #514060;
+  color: #c7bbd8;
+  cursor: default;
+}
+.boton-cancelar-pago {
+  min-height: 36px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid #fb71854d;
+  border-radius: 9px;
+  color: #fda4af;
+  background: #fb718509;
+  font-size: 0.79rem;
+  font-weight: 700;
+}
+.boton-cancelar-pago:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.pago-exitoso {
+  width: min(700px, 100%);
+  margin: 40px auto;
+  padding: 30px;
+  border: 1px solid #8b5cf64d;
+  border-radius: 20px;
+  background: var(--fondo-caja);
+  text-align: center;
+}
+.pago-exitoso-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  color: #86efac;
+  background: #16a34a20;
+  font-size: 2rem;
+}
+.pago-exitoso p {
+  color: var(--texto-secundario);
+  line-height: 1.5;
+}
+.codigo-compra {
+  overflow-wrap: anywhere;
+  font-size: 0.85rem;
+}
+.acciones-pago-exitoso {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+.boton-cartelera {
+  background: #8b5cf623;
+  border: 1px solid #8b5cf64d;
+}
+@media (max-width: 1000px) {
+  main {
+    width: calc(100% - 28px);
+    margin-top: 16px;
+  }
+  .pago-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .resumen-compra-pago {
+    grid-column: 1 / -1;
+    height: auto;
+  }
+  .resumen-compra-pago .contenido-pago {
+    overflow: visible;
+  }
+  .panel-pago {
+    height: 550px;
+  }
+}
+@media (max-width: 650px) {
+  .pago-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .pago-encabezado {
+    padding-top: 48px;
+  }
+  .pago-encabezado .boton-volver {
+    top: 0;
+  }
+  .panel-pago {
+    height: auto;
+    max-height: 650px;
+  }
+  .contenido-pago {
+    flex: 0 1 auto;
+    padding: 13px;
+  }
+  .resumen-compra-pago {
+    grid-column: 1;
+  }
+  .pago-exitoso {
+    padding: 20px;
+  }
+  .acciones-pago-exitoso {
+    grid-template-columns: 1fr;
+  }
+}
+.saldo-puntos-pago {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 1px 0 10px;
+}
+.saldo-puntos-pago > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: 1px solid #8b5cf630;
+  border-radius: 8px;
+  background: #0b071455;
+}
+.saldo-puntos-pago span {
+  color: var(--texto-secundario);
+  font-size: 0.67rem;
+}
+.saldo-puntos-pago strong {
+  font-size: 0.95rem;
+  color: var(--celeste);
+}
+.lista-entradas-pago {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+.entrada-pago {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid #8b5cf638;
+  border-radius: 9px;
+  background: #8b5cf60a;
+}
+.entrada-pago > div:first-child {
+  min-width: 0;
+}
+.entrada-pago strong {
+  display: block;
+  font-size: 0.8rem;
+}
+.entrada-pago small {
+  display: block;
+  margin-top: 4px;
+  color: var(--texto-secundario);
+  font-size: 0.7rem;
+}
+.entrada-canjeada {
+  border-color: #86efac40;
+  background: #86efac08;
+}
+.entrada-canjeada small,
+.entrada-canjeada .importe-entrada-pago strong {
+  color: #86efac;
+}
+.importe-entrada-pago {
+  flex: 0 0 auto;
+  text-align: right;
+}
+.importe-entrada-pago s {
+  display: block;
+  margin-bottom: 4px;
+  color: #b8a8cb;
+  font-size: 0.68rem;
+}

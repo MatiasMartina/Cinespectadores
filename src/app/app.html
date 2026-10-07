@@ -1,0 +1,32 @@
+<div class="marco-aplicacion">
+  <app-navbar></app-navbar>
+
+  <div
+    class="contenido-aplicacion"
+    #contenido
+    tabindex="0"
+    role="region"
+    aria-label="Contenido de la página"
+  >
+    <router-outlet
+      (activate)="salidaCompra.registrarPagina($event); contenido.scrollTop = 0"
+      (deactivate)="salidaCompra.registrarPagina()"
+    ></router-outlet>
+  </div>
+</div>
+
+@if (!pwa.conectado()) {
+  <aside class="aviso-pwa" role="alert">
+    Sin conexión. Las compras, los saldos y la disponibilidad necesitan internet.
+  </aside>
+} @else if (pwa.nuevaVersion()) {
+  <aside class="aviso-pwa" role="status">
+    Hay una versión nueva.
+    <button type="button" (click)="pwa.actualizar()">Actualizar ahora</button>
+  </aside>
+} @else if (pwa.instalable()) {
+  <aside class="aviso-pwa">
+    <span>Llevá tu cine con vos.</span
+    ><button type="button" (click)="pwa.instalar()">Instalar aplicación</button>
+  </aside>
+}

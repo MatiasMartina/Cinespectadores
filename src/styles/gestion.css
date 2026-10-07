@@ -1,0 +1,445 @@
+.gestion {
+  width: min(1400px, 100%);
+  margin: auto;
+  padding: 36px 28px 72px;
+  color: var(--texto-principal);
+}
+.gestion h1 {
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  margin: 8px 0 16px;
+  letter-spacing: -0.04em;
+}
+.gestion h2 {
+  font-size: 1.2rem;
+  margin: 0 0 16px;
+}
+.gestion h3 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+.gestion p {
+  line-height: 1.6;
+}
+.gestion-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+.etiqueta-gestion {
+  color: var(--celeste);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.gestion .ayuda-gestion,
+.gestion small {
+  color: var(--texto-secundario);
+  font-size: 0.87rem;
+  line-height: 1.6;
+}
+.gestion .pestanas-gestion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(23, 17, 38, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.24);
+  border-radius: 16px;
+  margin: 0 0 30px;
+}
+.gestion .pestanas-gestion a {
+  padding: 11px 15px;
+  text-decoration: none;
+  color: var(--texto-secundario);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.gestion .pestanas-gestion a:hover,
+.gestion .pestanas-gestion .activo,
+.gestion button.activo {
+  color: var(--celeste);
+  background: rgba(34, 211, 238, 0.09);
+  border-color: var(--celeste);
+}
+.gestion-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.3fr);
+  gap: 24px;
+  align-items: start;
+}
+.gestion .panel {
+  background: var(--fondo-caja);
+  border: 1px solid rgba(139, 92, 246, 0.26);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  min-width: 0;
+}
+.gestion .form-gestion {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.gestion .campo-gestion {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+.gestion .campo-gestion label,
+.gestion form label {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.gestion .ancho-completo {
+  grid-column: 1/-1;
+}
+.gestion input:not([type='checkbox']),
+.gestion select,
+.gestion textarea {
+  width: 100%;
+  min-width: 0;
+  background: var(--fondo-input);
+  border: 1px solid rgba(139, 92, 246, 0.32);
+  border-radius: 10px;
+  padding: 12px;
+  color: var(--texto-principal);
+  font: inherit;
+  font-size: 0.9rem;
+  color-scheme: dark;
+}
+.gestion input:focus,
+.gestion select:focus,
+.gestion textarea:focus {
+  outline: 2px solid var(--celeste);
+  outline-offset: 2px;
+}
+.gestion textarea {
+  resize: vertical;
+}
+.gestion input[type='checkbox'] {
+  accent-color: var(--celeste);
+  width: 18px;
+  height: 18px;
+}
+.gestion button,
+.gestion .boton-gestion {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--texto-principal);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.gestion button:hover,
+.gestion .boton-gestion:hover {
+  border-color: var(--celeste);
+  background: rgba(34, 211, 238, 0.08);
+}
+.gestion button:focus-visible,
+.gestion a:focus-visible {
+  outline: 2px solid var(--celeste);
+  outline-offset: 3px;
+}
+.gestion button.primario {
+  background: linear-gradient(110deg, var(--violeta), var(--rosa));
+  border: 0;
+  color: white;
+  padding: 13px 19px;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.18);
+}
+.gestion button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.gestion button.peligro {
+  color: var(--coral);
+}
+.gestion .acciones-gestion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.gestion .acciones-gestion input,
+.gestion .acciones-gestion select {
+  width: auto;
+  max-width: 100%;
+}
+.gestion .registro-gestion {
+  display: grid;
+  grid-template-columns: 55px minmax(0, 1fr);
+  gap: 14px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.16);
+  padding: 18px 0;
+  align-items: start;
+}
+.gestion .registro-gestion:first-child {
+  padding-top: 0;
+}
+.gestion .registro-gestion:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.gestion .registro-gestion img {
+  width: 55px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.gestion .registro-gestion p {
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+  margin: 4px 0;
+}
+.gestion .registro-gestion .acciones-gestion {
+  grid-column: 2;
+}
+.gestion .registro-gestion.sin-imagen {
+  grid-template-columns: 1fr;
+}
+.gestion .registro-gestion.sin-imagen .acciones-gestion {
+  grid-column: 1;
+}
+.gestion .estado-gestion {
+  display: inline-block;
+  color: var(--celeste);
+  font-size: 0.75rem;
+  background: rgba(34, 211, 238, 0.06);
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+.gestion .fila-gestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+  font-size: 0.85rem;
+}
+.gestion .aviso-gestion {
+  padding: 14px 18px;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  color: var(--celeste);
+  background: rgba(34, 211, 238, 0.05);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.gestion .error {
+  color: var(--coral);
+}
+.gestion .aviso-gestion.error {
+  border-color: rgba(251, 113, 133, 0.45);
+  background: rgba(251, 113, 133, 0.05);
+}
+.gestion .tabla-wrapper {
+  overflow: auto;
+}
+.gestion table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.gestion th {
+  color: var(--texto-secundario);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.gestion td,
+.gestion th {
+  padding: 14px 10px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+}
+.gestion .dias-semana {
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gestion .dias-semana legend {
+  font-size: 0.85rem;
+  padding: 0 8px;
+}
+.gestion .modos-gestion {
+  margin-bottom: 20px;
+}
+.gestion .editor-mapa {
+  overflow: auto;
+  margin: 22px 0;
+}
+.gestion .detalle-validacion {
+  overflow-wrap: anywhere;
+}
+.gestion .codigo-validacion {
+  font-size: 0.8rem;
+  color: var(--celeste);
+}
+.gestion .items-validacion {
+  padding-left: 20px;
+  font-size: 0.9rem;
+  line-height: 2;
+}
+.gestion .lector-qr {
+  margin-bottom: 24px;
+}
+.gestion .visor-qr:empty {
+  display: none;
+}
+.gestion .visor-qr {
+  max-width: 420px;
+  margin: 0 auto 18px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+.gestion .archivo-qr {
+  font-size: 0.75rem !important;
+  padding: 5px !important;
+  max-width: 180px !important;
+}
+.gestion .detalle-validacion > button {
+  width: 100%;
+  margin-top: 20px;
+}
+@media (max-width: 1000px) {
+  .gestion-layout {
+    grid-template-columns: 1fr;
+  }
+  .gestion-encabezado {
+    align-items: start;
+    flex-direction: column;
+  }
+  .gestion .registro-gestion {
+    grid-template-columns: 55px minmax(0, 1fr) auto;
+  }
+  .gestion .registro-gestion .acciones-gestion {
+    grid-column: auto;
+  }
+  .gestion .registro-gestion.sin-imagen {
+    grid-template-columns: 1fr auto;
+  }
+  .gestion .registro-gestion.sin-imagen .acciones-gestion {
+    grid-column: auto;
+  }
+}
+@media (max-width: 600px) {
+  .gestion {
+    padding: 24px 16px 50px;
+  }
+  .gestion .panel {
+    padding: 20px 16px;
+  }
+  .gestion .form-gestion {
+    grid-template-columns: 1fr;
+  }
+  .gestion .pestanas-gestion a {
+    padding: 10px;
+  }
+  .gestion .registro-gestion {
+    grid-template-columns: 45px minmax(0, 1fr);
+  }
+  .gestion .registro-gestion .acciones-gestion {
+    grid-column: 2;
+  }
+  .gestion .registro-gestion.sin-imagen {
+    grid-template-columns: 1fr;
+  }
+  .gestion .registro-gestion.sin-imagen .acciones-gestion {
+    grid-column: 1;
+  }
+  .gestion .fila-gestion {
+    flex-wrap: wrap;
+  }
+  .gestion .acciones-gestion {
+    gap: 10px;
+  }
+  .gestion .acciones-gestion button {
+    flex-grow: 1;
+  }
+}
+
+.gestion-contenido {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.estado-carga {
+  min-height: 28px;
+  line-height: 1.5;
+  color: var(--texto-secundario);
+  overflow-wrap: anywhere;
+}
+.indicadores-gestion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.indicador {
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(34, 211, 238, 0.035);
+  border-radius: 14px;
+  padding: 22px;
+  min-width: 0;
+}
+.indicador span {
+  display: block;
+  color: var(--texto-secundario);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+.indicador strong {
+  font-size: 1.7rem;
+  color: var(--celeste);
+  overflow-wrap: anywhere;
+}
+.lista-beneficios {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+  max-height: 400px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.lista-beneficios li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+.lista-beneficios p {
+  margin: 8px 0;
+  font-size: 0.85rem;
+  color: var(--texto-secundario);
+}
+.historial-puntos {
+  max-height: 500px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.historial-puntos code {
+  font-size: 0.7rem;
+  overflow-wrap: anywhere;
+}

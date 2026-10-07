@@ -1,0 +1,61 @@
+﻿<h2>Empleados y administradores</h2>
+<p
+  class="estado-carga"
+  role="status"
+  [class.error]="error()"
+  [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+>
+  {{ cargando() ? 'Cargando cuentas…' : procesando() ? 'Guardando cambios…' : mensaje() }}
+</p>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <div class="gestion-layout">
+    <app-formulario-catalogo
+      [titulo]="editandoId ? 'Editar cuenta' : 'Nueva cuenta'"
+      [campos]="campos"
+      [valores]="valores"
+      (guardado)="guardar($event)"
+      (cancelado)="cancelar()"
+    />
+    <section class="panel lista-gestion" aria-label="Empleados y administradores registrados">
+      <h2>Cuentas registradas</h2>
+      <p class="ayuda-gestion">
+        El empleado valida Cine y Candy. El administrador también gestiona el cine. Las cuentas
+        nuevas ingresan con el email y la contraseña que definís acá.
+      </p>
+      <div class="scroll-panel">
+        @for (empleado of empleados(); track empleado.id) {
+          <article class="registro-gestion sin-imagen">
+            <div class="datos-registro">
+              <h3>{{ empleado.nombre }} {{ empleado.apellido }}</h3>
+              <p>
+                {{ empleado.email }} ·
+                <span class="estado-gestion"
+                  >{{ empleado.rol === 'admin' ? 'Administrador' : 'Empleado'
+                  }}{{ esCuentaPropia(empleado) ? ' · Tu cuenta' : '' }}</span
+                >
+              </p>
+            </div>
+            <div class="acciones-gestion">
+              <button type="button" (click)="editar(empleado)">Editar</button
+              ><button
+                type="button"
+                class="peligro"
+                [disabled]="esCuentaPropia(empleado)"
+                [title]="
+                  esCuentaPropia(empleado)
+                    ? 'No podés eliminar tu propia cuenta'
+                    : 'Eliminar cuenta'
+                "
+                (click)="eliminar(empleado)"
+              >
+                Eliminar
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <p>No hay empleados ni administradores registrados.</p>
+        }
+      </div>
+    </section>
+  </div>
+</fieldset>

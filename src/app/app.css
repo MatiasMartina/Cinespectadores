@@ -1,0 +1,55 @@
+:host {
+  display: block;
+  padding: 12px;
+  height: 100dvh;
+}
+
+/* Este marco permanece; Angular reemplaza solamente el contenido de la ruta. */
+.marco-aplicacion {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 1680px);
+  height: 100%;
+  margin: 0 auto;
+  border: 2px solid var(--rosa);
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at top left, rgb(252 1 118 / 9%), transparent 45%),
+    radial-gradient(ellipse at bottom right, rgb(0 229 255 / 5%), transparent 40%),
+    var(--fondo-principal);
+  box-shadow:
+    0 0 22px rgb(252 1 118 / 22%),
+    inset 0 0 24px rgb(252 1 118 / 5%);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+app-navbar {
+  flex-shrink: 0;
+}
+
+.contenido-aplicacion {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rosa) transparent;
+}
+
+.contenido-aplicacion:focus-visible {
+  outline: 2px solid var(--celeste);
+  outline-offset: -3px;
+}
+
+@media (max-width: 600px) {
+  :host {
+    padding: 6px;
+  }
+  .marco-aplicacion {
+    border-radius: 10px;
+  }
+  .contenido-aplicacion {
+    scrollbar-gutter: auto;
+  }
+}

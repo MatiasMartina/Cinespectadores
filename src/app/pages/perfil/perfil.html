@@ -1,0 +1,217 @@
+<main class="gestion perfil">
+  <header class="gestion-encabezado">
+    <div>
+      <p class="etiqueta-gestion">CINE SPECTADORES</p>
+      <h1>Mi cuenta</h1>
+    </div>
+    <button type="button" (click)="actualizar()" [disabled]="cargando() || procesando()">
+      Actualizar saldo
+    </button>
+  </header>
+  @if (usuario(); as cuenta) {
+    <section class="perfil-resumen">
+      <div class="identidad-perfil">
+        <h2>{{ cuenta.nombre }} {{ cuenta.apellido }}</h2>
+        <p>{{ cuenta.email }}</p>
+      </div>
+      <div class="saldo-perfil">
+        <span>Puntos disponibles</span
+        ><strong>{{ (cuenta.puntos ?? 0).toLocaleString('es-AR') }}</strong>
+      </div>
+      <div class="saldo-perfil">
+        <span>Crédito disponible</span
+        ><strong>${{ (cuenta.credito ?? 0).toLocaleString('es-AR') }}</strong>
+      </div>
+      <a class="boton-gestion" routerLink="/mis-peliculas">Mis películas y cancelaciones</a>
+    </section>
+    <p class="estado-carga" [class.error]="error()" role="status">
+      {{ cargando() ? 'Cargando tu cuenta…' : mensaje() }}
+    </p>
+    <div class="perfil-layout">
+      <section class="panel panel-recompensas">
+        <h2>Canjeá tus puntos</h2>
+        <div class="contenido-perfil">
+          <p class="ayuda-gestion">
+            Canjeá productos acá y retiralos con su QR. Para una entrada, primero elegí la función y
+            tus butacas.
+          </p>
+          <ul class="lista-beneficios">
+            @for (r of recompensas(); track r.id) {
+              @if (r.activa) {
+                <li class="tarjeta-recompensa">
+                  <strong>{{ r.nombre }}</strong>
+                  <p>{{ r.puntos.toLocaleString('es-AR') }} puntos por unidad</p>
+                  @if (r.tipo === 'producto') {
+                    <div class="acciones-canje">
+                      <label [for]="'cantidad-perfil-' + r.id">Cantidad</label>
+                      <input
+                        [id]="'cantidad-perfil-' + r.id"
+                        type="number"
+                        min="1"
+                        [max]="maximoCanje(r) || 1"
+                        [ngModel]="cantidades[r.id] || 1"
+                        (ngModelChange)="cantidades[r.id] = $event; normalizarCantidad(r)"
+                        [disabled]="cargando() || procesando() || maximoCanje(r) === 0"
+                      />
+                      <button
+                        type="button"
+                        class="primario"
+                        [disabled]="!puedeCanjear(r)"
+                        (click)="canjear(r)"
+                      >
+                        {{ procesando() ? 'Procesando…' : 'Canjear' }}
+                      </button>
+                    </div>
+                  } @else {
+                    <a class="boton-gestion primario" [routerLink]="destinoCanjes">{{
+                      destinoCanjes === '/pago'
+                        ? 'Canjear en mi compra'
+                        : 'Elegir función y butacas'
+                    }}</a>
+                  }
+                  <small
+                    class="estado-recompensa"
+                    [class.error]="(cuenta.puntos ?? 0) < r.puntos"
+                    >{{
+                      (cuenta.puntos ?? 0) >= r.puntos
+                        ? r.tipo === 'producto'
+                          ? 'Disponible para canjear'
+                          : 'Tenés puntos suficientes para una entrada'
+                        : 'Te faltan ' +
+                          (r.puntos - (cuenta.puntos ?? 0)).toLocaleString('es-AR') +
+                          ' puntos'
+                    }}</small
+                  >
+                </li>
+              }
+            } @empty {
+              <p>No hay recompensas disponibles.</p>
+            }
+          </ul>
+          <p class="ayuda-gestion">
+            Ganás 1 punto por cada peso pagado. Los puntos son personales. El crédito se aplica en
+            Pago.
+          </p>
+        </div>
+      </section>
+      <section class="panel panel-canjes">
+        <h2>Mis canjes de productos</h2>
+        <div class="contenido-perfil">
+          @if (canjeSeleccionado(); as canje) {
+            <div class="qr-canje">
+              <h3>
+                {{ canje.entrada.productosCandy[0].cantidad }} ×
+                {{ canje.entrada.productosCandy[0].nombre }}
+              </h3>
+              <p class="estado-gestion">
+                {{ canje.candy ? 'Ya retirado' : 'Pendiente de retiro' }}
+              </p>
+              <div class="imagen-qr-canje">
+                @if (imagenQr()) {
+                  <img [src]="imagenQr()" alt="QR para retirar el canje del Candy Bar" />
+                } @else {
+                  <span>Preparando QR…</span>
+                }
+              </div>
+              <code>{{ canje.entrada.codigo }}</code>
+              @if (imagenQr()) {
+                <a
+                  class="boton-gestion"
+                  [href]="imagenQr()"
+                  [download]="'canje-' + canje.entrada.codigo + '.png'"
+                  >Guardar QR</a
+                >
+              }
+            </div>
+          } @else {
+            <p class="ayuda-gestion vacio-canjes">
+              Elegí un canje de la lista para ver su QR de retiro.
+            </p>
+          }
+          <ul class="lista-canjes">
+            @for (canje of canjes(); track canje.entrada.codigo) {
+              <li>
+                <button
+                  type="button"
+                  class="boton-canje-guardado"
+                  (click)="mostrarCanje(canje)"
+                  [class.seleccionado]="
+                    canjeSeleccionado()?.entrada?.codigo === canje.entrada.codigo
+                  "
+                >
+                  <strong
+                    >{{ canje.entrada.productosCandy[0].cantidad }} ×
+                    {{ canje.entrada.productosCandy[0].nombre }}</strong
+                  >
+                  <span
+                    >{{ canje.fechaCompra | date: 'dd/MM HH:mm' : '-0300' }} ·
+                    {{ canje.candy ? 'Retirado' : 'Ver QR' }}</span
+                  >
+                </button>
+              </li>
+            } @empty {
+              <li class="ayuda-gestion">Todavía no canjeaste productos desde Mi cuenta.</li>
+            }
+          </ul>
+        </div>
+      </section>
+      <section class="panel panel-historial">
+        <h2>Movimientos de tu cuenta</h2>
+        <div class="pestanas-perfil">
+          <button
+            type="button"
+            [class.activo]="historial === 'puntos'"
+            (click)="historial = 'puntos'"
+          >
+            Puntos
+          </button>
+          <button
+            type="button"
+            [class.activo]="historial === 'credito'"
+            (click)="historial = 'credito'"
+          >
+            Crédito
+          </button>
+        </div>
+        <div class="contenido-perfil">
+          <ul class="lista-movimientos">
+            @if (historial === 'puntos') {
+              @for (m of movimientos(); track m.id) {
+                <li>
+                  <div>
+                    <strong
+                      >{{ m.detalle }}{{ m.tipo === 'canje' ? ' × ' + m.cantidad : '' }}</strong
+                    ><small>{{ m.fecha | date: 'dd/MM/yyyy HH:mm' : '-0300' }}</small>
+                  </div>
+                  <span class="importe-movimiento" [class.negativo]="m.puntos < 0"
+                    >{{ m.puntos > 0 ? '+' : '' }}{{ m.puntos.toLocaleString('es-AR') }} pts</span
+                  >
+                  <code>{{ m.codigoVenta }}</code>
+                </li>
+              } @empty {
+                <li class="ayuda-gestion">Todavía no tenés movimientos de puntos.</li>
+              }
+            } @else {
+              @for (m of movimientosCredito(); track m.id) {
+                <li>
+                  <div>
+                    <strong>{{ m.detalle }}</strong
+                    ><small>{{ m.fecha | date: 'dd/MM/yyyy HH:mm' : '-0300' }}</small>
+                  </div>
+                  <span class="importe-movimiento" [class.negativo]="m.importe < 0"
+                    >{{ m.importe > 0 ? '+' : '−' }}${{
+                      (m.importe < 0 ? -m.importe : m.importe).toLocaleString('es-AR')
+                    }}</span
+                  >
+                  <code>{{ m.codigoVenta }}</code>
+                </li>
+              } @empty {
+                <li class="ayuda-gestion">Todavía no tenés movimientos de crédito.</li>
+              }
+            }
+          </ul>
+        </div>
+      </section>
+    </div>
+  }
+</main>

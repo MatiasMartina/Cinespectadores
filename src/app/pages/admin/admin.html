@@ -1,0 +1,15 @@
+<main class="gestion administracion">
+  <header class="gestion-encabezado">
+    <div>
+      <p class="etiqueta-gestion">CINE SPECTADORES · ADMINISTRACIÓN</p>
+      <h1>Tu cine, bajo control</h1>
+    </div>
+    <a class="boton-gestion" routerLink="/empleados">Validar una entrada ↗</a>
+  </header>
+  <nav class="pestanas-gestion" aria-label="Secciones de administración">
+    @for (seccion of secciones; track seccion.ruta) {
+      <a [routerLink]="seccion.ruta" routerLinkActive="activo">{{ seccion.nombre }}</a>
+    }
+  </nav>
+  <router-outlet></router-outlet>
+</main>

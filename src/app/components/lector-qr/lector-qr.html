@@ -1,0 +1,23 @@
+<div class="lector-qr">
+  <div class="marco-video">
+    <div [id]="id" class="video-qr" aria-label="Video en vivo de la cámara"></div>
+    @if (!camaraActiva()) {
+      <div class="visor-espera">
+        <span>{{ ocupado() ? 'Preparando cámara…' : 'Cámara no disponible' }}</span>
+      </div>
+    }
+  </div>
+
+  @if (camaraActiva()) {
+    <p class="estado-camara" role="status">
+      <span class="indicador-vivo" aria-hidden="true"></span>
+      En vivo · Ubicá el QR completo dentro del recuadro.
+    </p>
+  }
+  @if (codigoDetectado()) {
+    <p class="qr-detectado" role="status">QR leído. Revisá la compra antes de confirmar.</p>
+  }
+  @if (mensaje()) {
+    <p class="error mensaje-lector" role="alert">{{ mensaje() }}</p>
+  }
+</div>

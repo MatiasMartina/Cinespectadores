@@ -1,0 +1,298 @@
+﻿<h2>Programación de funciones</h2>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <nav class="subnav-gestion" aria-label="Gestión de funciones">
+    <button
+      type="button"
+      [class.activo]="seccion() === 'lista'"
+      [attr.aria-pressed]="seccion() === 'lista'"
+      (click)="seccion.set('lista')"
+    >
+      Funciones existentes
+    </button>
+    <button
+      type="button"
+      [class.activo]="seccion() === 'formulario'"
+      [attr.aria-pressed]="seccion() === 'formulario'"
+      (click)="nueva()"
+    >
+      Agregar función
+    </button>
+  </nav>
+  <p
+    class="estado-carga"
+    aria-live="polite"
+    [class.error]="error()"
+    [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+  >
+    {{ cargando() ? 'Cargando funciones…' : procesando() ? 'Guardando cambios…' : mensaje() }}
+  </p>
+  @if (seccion() === 'lista') {
+    <section class="panel panel-listado panel-con-acciones">
+      <div class="contenido-panel">
+        <div class="filtros-gestion filtros-funciones">
+          <label
+            >Película<input
+              type="search"
+              placeholder="Buscar por nombre"
+              [ngModel]="busqueda()"
+              (ngModelChange)="busqueda.set($event)"
+          /></label>
+          <label
+            >Sala<select [ngModel]="sala()" (ngModelChange)="sala.set($event)">
+              <option value="">Todas</option>
+              @for (s of salas; track s.id) {
+                <option [value]="s.numero">{{ s.nombre }} · Nº {{ s.numero }}</option>
+              }
+            </select></label
+          >
+          <label
+            >Formato<select [ngModel]="formatoFiltro()" (ngModelChange)="formatoFiltro.set($event)">
+              <option value="">Todos</option>
+              <option>2D</option>
+              <option>3D</option>
+              <option>4D</option>
+              <option>5D</option>
+            </select></label
+          >
+          <label
+            >Fecha de referencia<input
+              type="text"
+              inputmode="numeric"
+              maxlength="10"
+              placeholder="dd/mm/aaaa"
+              [ngModel]="fechaFiltro()"
+              (ngModelChange)="fechaFiltro.set($event)"
+              [attr.aria-invalid]="fechaFiltroInvalida"
+          /></label>
+          <label
+            >Ver por<select [ngModel]="periodo()" (ngModelChange)="periodo.set($event)">
+              <option value="dia">Día</option>
+              <option value="semana">Semana (lunes a domingo)</option>
+              <option value="mes">Mes completo</option>
+            </select></label
+          >
+        </div>
+        <p class="error error-campo" aria-live="polite">
+          {{ fechaFiltroInvalida ? 'Escribí una fecha real: dd/mm/aaaa.' : '' }}
+        </p>
+        <div class="barra-listado">
+          <span
+            >{{ filtradas().length }} funciones · {{ seleccionadasVisibles().length }} seleccionadas
+            visibles</span
+          >
+        </div>
+        <div class="tabla-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    aria-label="Seleccionar todas las funciones visibles"
+                    [checked]="todasSeleccionadas()"
+                    (change)="elegirTodas()"
+                  />
+                </th>
+                <th>Película</th>
+                <th>Fecha y hora</th>
+                <th>Sala</th>
+                <th>Formato</th>
+                <th>Precio</th>
+                <th>Sala libre desde</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (funcion of filtradas(); track funcion.id) {
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      [attr.aria-label]="
+                        'Seleccionar ' +
+                        getPelicula(funcion.peliculaId) +
+                        ' ' +
+                        fechaParaMostrar(funcion.fecha) +
+                        ' ' +
+                        funcion.hora
+                      "
+                      [checked]="seleccionadas().includes(funcion.id)"
+                      (change)="elegirFuncion(funcion.id)"
+                    />
+                  </td>
+                  <td [title]="getPelicula(funcion.peliculaId)">
+                    {{ getPelicula(funcion.peliculaId) }}
+                  </td>
+                  <td>{{ fechaParaMostrar(funcion.fecha) }}<br />{{ funcion.hora }} hs</td>
+                  <td>{{ funcion.salaNumero }}</td>
+                  <td>{{ funcion.formato }} · {{ funcion.idioma }}</td>
+                  <td>${{ funcion.precio.toLocaleString('es-AR') }}</td>
+                  <td>{{ getFin(funcion) }}</td>
+                  <td>
+                    <div class="acciones-gestion">
+                      <button (click)="editar(funcion)">Editar</button
+                      ><button class="peligro" (click)="eliminar(funcion)">Eliminar</button>
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="8">No hay funciones que coincidan con los filtros.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="acciones-gestion pie-panel">
+        <button type="button" (click)="limpiarFiltros()">Limpiar filtros</button>
+        <button
+          type="button"
+          class="peligro"
+          [disabled]="!seleccionadasVisibles().length"
+          (click)="eliminarSeleccionadas()"
+        >
+          Eliminar seleccionadas
+        </button>
+      </div>
+    </section>
+  } @else {
+    <section class="panel panel-programacion panel-con-acciones">
+      <h2>{{ editandoId ? 'Editar función' : 'Nueva función' }}</h2>
+      <p class="ayuda-gestion">
+        La sala se asigna automáticamente: se busca una habilitada, compatible con el formato y
+        libre durante la película más 30 minutos. Al editar se prioriza la sala actual. La
+        programación semanal se guarda completa o se rechaza.
+      </p>
+      <div class="contenido-panel">
+        @if (!editandoId) {
+          <div class="acciones-gestion modos-gestion">
+            <button [class.activo]="modo === 'unica'" (click)="modo = 'unica'">Una función</button
+            ><button [class.activo]="modo === 'semanal'" (click)="modo = 'semanal'">
+              Por días de la semana
+            </button>
+          </div>
+        }
+        <form
+          id="form-programacion"
+          class="form-gestion"
+          [formGroup]="formulario"
+          (ngSubmit)="guardar()"
+          novalidate
+        >
+          <div class="campo-gestion">
+            <label for="peliculaFuncion">Película</label
+            ><select id="peliculaFuncion" formControlName="peliculaId">
+              <option [ngValue]="null">Elegí una película</option>
+              @for (pelicula of peliculas; track pelicula.id) {
+                @if (pelicula.activa !== false) {
+                  <option [ngValue]="pelicula.id">
+                    {{ pelicula.nombre }} · {{ pelicula.duracionMinutos }} min
+                  </option>
+                }
+              }</select
+            ><small class="error error-campo">{{
+              formulario.controls.peliculaId.touched && formulario.controls.peliculaId.invalid
+                ? 'Elegí una película publicada.'
+                : ''
+            }}</small>
+          </div>
+          <div class="campo-gestion">
+            <label for="horaFuncion">Hora (HH:mm)</label
+            ><input
+              id="horaFuncion"
+              type="text"
+              inputmode="numeric"
+              maxlength="5"
+              placeholder="18:00"
+              formControlName="hora"
+            /><small class="error error-campo">{{
+              formulario.controls.hora.touched && formulario.controls.hora.invalid
+                ? 'Usá HH:mm, entre 00:00 y 23:59.'
+                : ''
+            }}</small>
+          </div>
+          <div class="campo-gestion">
+            <label for="fechaFuncion"
+              >{{ modo === 'semanal' ? 'Desde' : 'Fecha' }} (dd/mm/aaaa)</label
+            ><input
+              id="fechaFuncion"
+              type="text"
+              inputmode="numeric"
+              maxlength="10"
+              placeholder="dd/mm/aaaa"
+              formControlName="fecha"
+            /><small class="error error-campo">{{
+              formulario.controls.fecha.touched && formulario.controls.fecha.invalid
+                ? 'Escribí una fecha real, desde hoy.'
+                : ''
+            }}</small>
+          </div>
+          @if (modo === 'semanal') {
+            <div class="campo-gestion">
+              <label for="hastaFuncion">Hasta (dd/mm/aaaa)</label
+              ><input
+                id="hastaFuncion"
+                type="text"
+                inputmode="numeric"
+                maxlength="10"
+                placeholder="dd/mm/aaaa"
+                formControlName="hasta"
+              /><small class="error error-campo">{{
+                formulario.controls.hasta.touched && formulario.controls.hasta.invalid
+                  ? 'Escribí una fecha real: dd/mm/aaaa.'
+                  : ''
+              }}</small>
+            </div>
+            <fieldset class="dias-semana ancho-completo">
+              <legend>Días de proyección</legend>
+              @for (dia of diasSemana; track dia.id) {
+                <button
+                  type="button"
+                  [class.activo]="dias.includes(dia.id)"
+                  [attr.aria-pressed]="dias.includes(dia.id)"
+                  (click)="elegirDia(dia.id)"
+                >
+                  {{ dia.nombre }}
+                </button>
+              }
+            </fieldset>
+          }
+          <div class="campo-gestion">
+            <label for="formatoFuncion">Formato</label
+            ><select id="formatoFuncion" formControlName="formato">
+              <option>2D</option>
+              <option>3D</option>
+              <option>4D</option>
+              <option>5D</option>
+            </select>
+          </div>
+          <div class="campo-gestion">
+            <label for="idiomaFuncion">Idioma</label
+            ><select id="idiomaFuncion" formControlName="idioma">
+              <option>Castellano</option>
+              <option>Subtitulada</option>
+            </select>
+          </div>
+          <div class="campo-gestion">
+            <label for="precioFuncion">Precio base</label
+            ><input id="precioFuncion" type="number" min="1" formControlName="precio" /><small
+              class="error error-campo"
+              >{{
+                formulario.controls.precio.touched && formulario.controls.precio.invalid
+                  ? 'Ingresá un importe mayor a cero.'
+                  : ''
+              }}</small
+            >
+          </div>
+        </form>
+      </div>
+      <div class="acciones-gestion pie-panel">
+        <button class="primario" type="submit" form="form-programacion">
+          Guardar y asignar sala
+        </button>
+        <button type="button" (click)="cancelar()">Volver al listado</button>
+      </div>
+    </section>
+  }
+</fieldset>

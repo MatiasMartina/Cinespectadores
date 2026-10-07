@@ -1,0 +1,500 @@
+main {
+  display: grid;
+  min-height: calc(100vh - 88px);
+  place-items: center;
+
+  padding: 29px 26px 45px;
+}
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+
+.confirmacion {
+  width: min(100%, 608px);
+
+  padding: 22px;
+
+  border: 1px solid rgb(139 92 246 / 35%);
+  border-radius: 16px;
+
+  background: linear-gradient(145deg, rgb(139 92 246 / 10%), transparent 58%), #09070e;
+
+  box-shadow: 0 10px 24px rgb(0 0 0 / 25%);
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+.confirmacion-encabezado {
+  margin-bottom: 19px;
+  text-align: center;
+}
+
+.confirmacion-etiqueta,
+.bloque-etiqueta {
+  margin: 0 0 6px;
+
+  color: var(--celeste);
+
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.confirmacion h1 {
+  margin: 0;
+
+  color: var(--texto-principal);
+
+  font-size: clamp(1.52rem, 2.4vw, 1.92rem);
+  line-height: 1.1;
+}
+
+.confirmacion-encabezado > p:last-child {
+  margin: 8px 0 0;
+
+  color: var(--texto-secundario);
+
+  font-size: 0.72rem;
+}
+
+/* =========================
+   BLOQUES DEL RESUMEN
+========================= */
+
+.bloque-resumen {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+
+  border: 1px solid rgb(139 92 246 / 22%);
+  border-radius: 11px;
+
+  background-color: rgb(255 255 255 / 3%);
+}
+
+.bloque-resumen h2 {
+  margin: 0;
+
+  color: var(--texto-principal);
+
+  font-size: 1.04rem;
+}
+
+/* =========================
+   ENCABEZADO DE CADA BLOQUE
+========================= */
+
+.bloque-encabezado {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bloque-encabezado .bloque-etiqueta {
+  margin: 0;
+  grid-column: 2;
+  text-align: center;
+}
+
+.bloque-encabezado .boton-editar {
+  grid-column: 3;
+}
+
+.pelicula-resumen > .bloque-etiqueta {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   BOTÓN EDITAR
+========================= */
+
+.boton-editar {
+  display: grid;
+
+  width: 34px;
+  height: 34px;
+
+  place-items: center;
+
+  border: 1px solid rgb(139 92 246 / 35%);
+  border-radius: 50%;
+
+  background-color: rgb(139 92 246 / 8%);
+  color: var(--texto-principal);
+
+  font-size: 1rem;
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.boton-editar:hover {
+  border-color: var(--celeste);
+
+  background-color: rgb(34 211 238 / 10%);
+  color: var(--celeste);
+
+  transform: scale(1.06);
+}
+
+/* =========================
+   DATOS DE LA FUNCIÓN
+========================= */
+
+.datos-funcion-confirmacion {
+  display: grid;
+  gap: 8px;
+
+  margin-top: 11px;
+}
+
+.datos-funcion-confirmacion p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+
+  margin: 0;
+
+  color: var(--texto-secundario);
+
+  font-size: 0.69rem;
+}
+
+.datos-funcion-confirmacion strong {
+  color: var(--texto-principal);
+
+  text-align: right;
+}
+
+/* =========================
+   BUTACAS
+========================= */
+.lista-butacas-confirmacion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin: 12px 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.lista-butacas-confirmacion li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgb(139 92 246 / 25%);
+  border-radius: 999px;
+
+  background-color: rgb(255 255 255 / 3%);
+}
+
+.lista-butacas-confirmacion strong {
+  color: var(--texto-principal);
+
+  font-size: 0.85rem;
+}
+
+.tipo-butaca {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.tipo-comun {
+  color: var(--texto-secundario);
+}
+
+.tipo-vip {
+  color: #fbbf24;
+}
+
+.tipo-accesible {
+  color: var(--celeste);
+}
+
+/* =========================
+   CANDY BAR
+========================= */
+
+.candy-confirmacion {
+  margin: 8px 0 0;
+
+  color: var(--texto-principal);
+
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+/* =========================
+   TOTALES
+========================= */
+
+.totales {
+  display: grid;
+  gap: 10px;
+
+  margin-top: 18px;
+  padding: 16px;
+
+  border: 1px solid rgb(34 211 238 / 30%);
+  border-radius: 13px;
+
+  background-color: rgb(34 211 238 / 5%);
+}
+
+.fila-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+
+  color: var(--texto-secundario);
+
+  font-size: 0.72rem;
+}
+
+.fila-total strong {
+  color: var(--texto-principal);
+
+  font-variant-numeric: tabular-nums;
+}
+
+.total-final {
+  margin-top: 3px;
+  padding-top: 11px;
+
+  border-top: 1px solid rgb(34 211 238 / 25%);
+}
+
+.total-final span {
+  color: var(--texto-principal);
+
+  font-weight: 700;
+}
+
+.total-final strong {
+  color: var(--celeste);
+
+  font-size: 1.16rem;
+  font-weight: 800;
+}
+
+/* =========================
+   ACCIONES
+========================= */
+
+.acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+
+  margin-top: 19px;
+}
+
+.boton-secundario,
+.boton-cancelar,
+.boton-finalizar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 47px;
+  padding: 14px 20px;
+
+  border-radius: 999px;
+
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* =========================
+   BOTÓN SECUNDARIO
+========================= */
+
+.boton-secundario {
+  border: 1px solid rgb(139 92 246 / 35%);
+
+  background-color: rgb(139 92 246 / 8%);
+  color: var(--texto-principal);
+}
+
+.boton-secundario:hover {
+  border-color: var(--celeste);
+
+  background-color: rgb(139 92 246 / 18%);
+
+  transform: translateX(-2px);
+}
+
+.boton-cancelar {
+  border: 1px solid rgb(248 113 113 / 45%);
+
+  background-color: rgb(248 113 113 / 8%);
+  color: #fca5a5;
+}
+
+.boton-cancelar:hover {
+  border-color: #f87171;
+
+  background-color: rgb(248 113 113 / 16%);
+}
+
+/* =========================
+   BOTÓN FINALIZAR
+========================= */
+
+.boton-finalizar {
+  border: 0;
+
+  background-color: #f5f3ff;
+  color: #140d22;
+}
+
+.boton-finalizar:hover {
+  background-color: var(--celeste);
+}
+
+.boton-finalizar span {
+  font-size: 0.92rem;
+}
+
+/* =========================
+   MENSAJE DE ÉXITO
+========================= */
+
+.exito {
+  flex: 1;
+
+  margin: 0;
+  padding: 11px 13px;
+
+  border: 1px solid rgb(34 211 238 / 35%);
+  border-radius: 10px;
+
+  background-color: rgb(34 211 238 / 7%);
+
+  color: var(--celeste);
+
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* =========================
+   ESTADO VACÍO
+========================= */
+
+.confirmacion-vacia {
+  text-align: center;
+}
+
+.confirmacion-vacia > p:not(.confirmacion-etiqueta) {
+  margin: 11px 0 18px;
+
+  color: var(--texto-secundario);
+
+  line-height: 1.55;
+}
+
+/* =========================
+   LISTA DE CANDY BAR
+========================= */
+
+.lista-candy {
+  display: grid;
+  gap: 6px;
+
+  margin: 11px 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.lista-candy li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+
+  color: var(--texto-secundario);
+
+  font-size: 0.69rem;
+}
+
+.lista-candy strong {
+  color: var(--texto-principal);
+
+  font-variant-numeric: tabular-nums;
+}
+
+.candy-vacio {
+  margin: 8px 0 0;
+
+  color: var(--texto-secundario);
+
+  font-size: 0.69rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 650px) {
+  main {
+    padding: 19px 13px 32px;
+  }
+
+  .confirmacion {
+    padding: 18px;
+  }
+
+  .acciones {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .boton-finalizar,
+  .boton-cancelar {
+    width: 100%;
+  }
+
+  .datos-funcion-confirmacion p {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .datos-funcion-confirmacion strong {
+    text-align: left;
+  }
+}

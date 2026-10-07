@@ -1,0 +1,126 @@
+<section class="panel panel-con-acciones">
+  <div class="contenido-panel">
+    <h2>Facturación y ventas</h2>
+    <p class="ayuda-gestion">
+      Fecha de compra en Argentina. Se excluyen las ventas canceladas. Elegí un día, una semana o un
+      mes.
+    </p>
+    <form id="form-reportes" class="form-gestion" (ngSubmit)="consultar()">
+      <div class="campo-gestion">
+        <label for="fechaReporte">Fecha de referencia (dd/mm/aaaa)</label
+        ><input
+          id="fechaReporte"
+          type="text"
+          inputmode="numeric"
+          placeholder="dd/mm/aaaa"
+          maxlength="10"
+          name="fecha"
+          [(ngModel)]="fecha"
+          required
+          [disabled]="cargando() || exportando()"
+        />
+      </div>
+      <div class="campo-gestion">
+        <label for="periodoReporte">Período</label
+        ><select
+          id="periodoReporte"
+          name="periodo"
+          [(ngModel)]="periodo"
+          [disabled]="cargando() || exportando()"
+        >
+          <option value="dia">Día</option>
+          <option value="semana">Semana (lunes a domingo)</option>
+          <option value="mes">Mes completo</option>
+        </select>
+      </div>
+    </form>
+    <p
+      class="estado-carga"
+      role="status"
+      [class.sin-mensaje]="!cargando() && !exportando() && !mensaje()"
+    >
+      {{ cargando() ? 'Consultando ventas…' : exportando() ? 'Preparando archivo…' : mensaje() }}
+    </p>
+    @if (reporte(); as datos) {
+      <h3>{{ datos.desde }} al {{ datos.hasta }}</h3>
+      <div class="indicadores-gestion">
+        <article class="indicador">
+          <span>Facturación</span
+          ><strong>${{ totales().facturacion.toLocaleString('es-AR') }}</strong>
+        </article>
+        <article class="indicador">
+          <span>Cobrado con tarjeta</span
+          ><strong>${{ totales().tarjeta.toLocaleString('es-AR') }}</strong>
+        </article>
+        <article class="indicador">
+          <span>Crédito utilizado</span
+          ><strong>${{ totales().credito.toLocaleString('es-AR') }}</strong>
+        </article>
+        <article class="indicador">
+          <span>Entradas / compras</span
+          ><strong>{{ totales().entradas }} / {{ totales().compras }}</strong>
+        </article>
+      </div>
+      <div class="tabla-wrapper reporte-diario-tabla">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Compras</th>
+              <th>Entradas</th>
+              <th>Facturación</th>
+              <th>Tarjeta</th>
+              <th>Crédito</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (dia of datos.dias; track dia.fecha) {
+              <tr>
+                <td>{{ dia.fecha }}</td>
+                <td>{{ dia.compras }}</td>
+                <td>{{ dia.entradas }}</td>
+                <td>${{ dia.recaudacion.toLocaleString('es-AR') }}</td>
+                <td>${{ (dia.cobradoTarjeta ?? 0).toLocaleString('es-AR') }}</td>
+                <td>${{ (dia.creditoUtilizado ?? 0).toLocaleString('es-AR') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+  <div class="acciones-gestion pie-panel">
+    <button
+      type="submit"
+      form="form-reportes"
+      class="primario"
+      [disabled]="cargando() || exportando() || !fecha"
+    >
+      Consultar
+    </button>
+    @if (reporte()) {
+      <button type="button" (click)="exportar('pdf')" [disabled]="exportando()">
+        Descargar PDF
+      </button>
+      <button type="button" (click)="exportar('excel')" [disabled]="exportando()">
+        Descargar Excel
+      </button>
+    }
+  </div>
+</section>
+<div class="gestion-layout graficos-reportes">
+  <section class="panel">
+    <h2>Películas más vistas</h2>
+    <p class="ayuda-gestion">
+      Ingresos validados al cine, por fecha de función dentro del período.
+    </p>
+    <div class="scroll-grafico">
+      <app-grafico-barras [datos]="peliculas()" unidad="espectadores" />
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Candy Bar más vendido</h2>
+    <p class="ayuda-gestion">Unidades de compras vigentes; incluye combos y canjes.</p>
+    <div class="scroll-grafico"><app-grafico-barras [datos]="productos()" /></div>
+  </section>
+</div>

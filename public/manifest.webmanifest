@@ -1,0 +1,16 @@
+{
+  "name": "Cine Spectadores",
+  "short_name": "Cinespectadores",
+  "description": "Cartelera, entradas, Candy Bar y tu cuenta de cine.",
+  "lang": "es-AR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#171021",
+  "background_color": "#09070e",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

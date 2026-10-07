@@ -1,0 +1,171 @@
+﻿<h2>Candy Bar</h2>
+<p
+  class="estado-carga"
+  aria-live="polite"
+  [class.error]="error()"
+  [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+>
+  {{
+    cargando() ? mensaje() || 'Cargando datos…' : procesando() ? 'Guardando cambios…' : mensaje()
+  }}
+</p>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <div class="selector-candy selector-catalogo" role="group" aria-label="Sección de Candy Bar">
+    <button
+      type="button"
+      [class.activo]="seccion() === 'productos'"
+      [attr.aria-pressed]="seccion() === 'productos'"
+      aria-controls="candy-productos"
+      (click)="seccion.set('productos')"
+    >
+      Productos
+    </button>
+    <button
+      type="button"
+      [class.activo]="seccion() === 'categorias'"
+      [attr.aria-pressed]="seccion() === 'categorias'"
+      aria-controls="candy-categorias"
+      (click)="seccion.set('categorias')"
+    >
+      Categorías
+    </button>
+  </div>
+  <section
+    class="panel panel-candy panel-catalogo panel-con-acciones"
+    aria-label="Gestión de Candy Bar"
+  >
+    <div class="scroll-panel cuerpo-candy cuerpo-catalogo">
+      <!-- Ocultar conserva lo escrito al alternar entre productos y categorías. -->
+      <div
+        id="candy-productos"
+        class="contenido-candy contenido-catalogo"
+        [hidden]="seccion() !== 'productos'"
+      >
+        <app-formulario-catalogo
+          idFormulario="form-producto-candy"
+          [mostrarAcciones]="false"
+          [titulo]="editandoId ? 'Editar producto' : 'Nuevo producto'"
+          [campos]="campos"
+          [valores]="valores"
+          (guardado)="guardar($event)"
+          (cancelado)="cancelar()"
+        ></app-formulario-catalogo>
+        <section class="lista-candy lista-catalogo" aria-label="Productos cargados">
+          <h2>Productos cargados</h2>
+          <div class="filtros-gestion">
+            <label
+              >Buscar producto<input
+                type="search"
+                placeholder="Nombre del producto"
+                [ngModel]="busqueda()"
+                (ngModelChange)="busqueda.set($event)"
+            /></label>
+            <label
+              >Categoría<select
+                [ngModel]="categoriaFiltro()"
+                (ngModelChange)="categoriaFiltro.set($event)"
+              >
+                <option value="">Todas</option>
+                @for (categoria of categorias; track categoria.id) {
+                  <option [value]="categoria.id">{{ categoria.nombre }}</option>
+                }
+              </select></label
+            >
+            <label
+              >Estado<select
+                [ngModel]="disponibilidad()"
+                (ngModelChange)="disponibilidad.set($event)"
+              >
+                <option value="">Todos</option>
+                <option value="disponible">Disponible</option>
+                <option value="oculto">Oculto</option>
+              </select></label
+            >
+          </div>
+          <p class="cantidad-resultados">{{ filtrados().length }} productos</p>
+          <div class="scroll-panel">
+            @for (producto of filtrados(); track producto.id) {
+              <article class="registro-gestion">
+                <img [src]="producto.imagenUrl" [alt]="producto.nombre" loading="lazy" />
+                <div>
+                  <h3>{{ producto.nombre }}</h3>
+                  <p>
+                    {{ getCategoria(producto.categoriaId) }} · ${{
+                      producto.precio.toLocaleString('es-AR')
+                    }}
+                  </p>
+                  <span class="estado-gestion">{{
+                    producto.activo !== false ? 'Disponible' : 'Oculto'
+                  }}</span>
+                </div>
+                <div class="acciones-gestion">
+                  <button type="button" (click)="editar(producto)">Editar</button>
+                  <button type="button" class="peligro" (click)="eliminar(producto)">
+                    Eliminar
+                  </button>
+                </div>
+              </article>
+            } @empty {
+              <p>No hay productos que coincidan con los filtros.</p>
+            }
+          </div>
+        </section>
+      </div>
+      <div
+        id="candy-categorias"
+        class="contenido-candy contenido-catalogo"
+        [hidden]="seccion() !== 'categorias'"
+      >
+        <section class="editor-categoria">
+          <h2>{{ categoriaId ? 'Editar categoría' : 'Nueva categoría' }}</h2>
+          <form id="form-categoria-candy" class="form-categoria" (ngSubmit)="guardarCategoria()">
+            <label for="nombreCategoria">Nombre de la categoría</label>
+            <input
+              id="nombreCategoria"
+              name="nombreCategoria"
+              [(ngModel)]="nombreCategoria"
+              required
+              maxlength="80"
+            />
+          </form>
+        </section>
+        <section class="lista-candy lista-catalogo" aria-label="Categorías cargadas">
+          <h2>Categorías cargadas</h2>
+          <p class="cantidad-resultados">{{ categorias.length }} categorías</p>
+          <div class="scroll-panel">
+            @for (categoria of categorias; track categoria.id) {
+              <div class="fila-gestion">
+                <span>{{ categoria.nombre }}</span>
+                <div class="acciones-gestion">
+                  <button type="button" (click)="editarCategoria(categoria)">Editar</button>
+                  <button type="button" class="peligro" (click)="eliminarCategoria(categoria)">
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            } @empty {
+              <p>Todavía no hay categorías cargadas.</p>
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="pie-panel pie-candy pie-catalogo">
+      <div class="acciones-gestion">
+        @if (seccion() === 'productos') {
+          <button class="primario" type="submit" form="form-producto-candy">
+            Guardar producto
+          </button>
+          <button type="button" (click)="cancelar()">Cancelar edición</button>
+        } @else {
+          <button class="primario" type="submit" form="form-categoria-candy">
+            Guardar categoría
+          </button>
+          <button type="button" (click)="categoriaId = undefined; nombreCategoria = ''">
+            Cancelar edición
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+</fieldset>

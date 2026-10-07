@@ -1,0 +1,58 @@
+<main>
+  <h1>Cartelera</h1>
+  <p>Elegí una película para ver sus funciones y sacar entradas.</p>
+
+  @if (cargando()) {
+    <p role="status">Cargando cartelera…</p>
+  } @else if (mensaje()) {
+    <p role="alert">{{ mensaje() }}</p>
+  } @else {
+    @if (peliculasMasVendidas().length > 0) {
+      <section class="mas-vendidas">
+        <h2>Las más vendidas</h2>
+        <app-carrusel-peliculas [peliculas]="peliculasMasVendidas()"></app-carrusel-peliculas>
+      </section>
+    }
+
+    <section class="cartelera-completa">
+      <h2>Todas las películas</h2>
+
+      <section class="filtros">
+        <input
+          type="search"
+          placeholder="Buscar una película"
+          [(ngModel)]="busqueda"
+          (ngModelChange)="filtrarPeliculas()"
+        />
+
+        <div class="generos-filtro" role="group" aria-label="Filtrar por uno o varios géneros">
+          @for (genero of generos(); track genero) {
+            @if (genero !== 'Todos') {
+              <button
+                type="button"
+                [class.activo]="generosSeleccionados.includes(genero)"
+                [attr.aria-pressed]="generosSeleccionados.includes(genero)"
+                (click)="elegirGenero(genero)"
+              >
+                {{ genero }}
+              </button>
+            }
+          }
+          <button type="button" (click)="generosSeleccionados = []; filtrarPeliculas()">
+            Todos
+          </button>
+        </div>
+      </section>
+
+      @if (peliculasFiltradas().length > 0) {
+        <section class="peliculas">
+          @for (pelicula of peliculasFiltradas(); track pelicula.id) {
+            <app-pelicula-card [pelicula]="pelicula"></app-pelicula-card>
+          }
+        </section>
+      } @else {
+        <p>No encontramos películas con esos filtros.</p>
+      }
+    </section>
+  }
+</main>

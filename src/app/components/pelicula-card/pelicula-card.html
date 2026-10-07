@@ -1,0 +1,57 @@
+<a
+  class="pelicula-enlace"
+  [class.vista-previa]="vistaPrevia()"
+  [routerLink]="vistaPrevia() ? null : ['/pelicula', pelicula().id]"
+>
+  <article class="pelicula-card">
+    <div class="poster">
+      @if (pelicula().imagenUrl) {
+        <img
+          [src]="pelicula().imagenUrl"
+          [alt]="'Póster de ' + pelicula().nombre"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      } @else if (vistaPrevia()) {
+        <div class="poster-vacio">Agregá una URL para ver el póster</div>
+      }
+
+      <div class="informacion">
+        <div class="generos" [attr.title]="vistaPrevia() ? pelicula().generos.join(', ') : null">
+          @for (
+            genero of vistaPrevia() ? pelicula().generos.slice(0, 2) : pelicula().generos;
+            track genero
+          ) {
+            <span class="genero">{{ genero }}</span>
+          }
+          @if (vistaPrevia() && pelicula().generos.length > 2) {
+            <span class="genero generos-restantes">+{{ pelicula().generos.length - 2 }}</span>
+          }
+        </div>
+
+        <p class="sinopsis" [attr.title]="vistaPrevia() ? pelicula().sinopsis : null">
+          {{ pelicula().sinopsis }}
+        </p>
+
+        <div class="datos">
+          <span class="duracion"> {{ pelicula().duracionMinutos }} min </span>
+
+          <span class="clasificacion">
+            {{ pelicula().edadMinima === 0 ? 'ATP' : '+' + pelicula().edadMinima }}
+          </span>
+        </div>
+
+        @if (!vistaPrevia()) {
+          <span class="ver-funciones">
+            Ver funciones
+            <span aria-hidden="true">↗</span>
+          </span>
+        }
+      </div>
+    </div>
+
+    <div class="titulo">
+      <h3 [attr.title]="vistaPrevia() ? pelicula().nombre : null">{{ pelicula().nombre }}</h3>
+    </div>
+  </article>
+</a>

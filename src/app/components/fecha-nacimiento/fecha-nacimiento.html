@@ -1,0 +1,13 @@
+<input
+  [id]="identificador()"
+  type="text"
+  inputmode="numeric"
+  maxlength="10"
+  placeholder="dd/mm/aaaa"
+  autocomplete="bday"
+  [value]="valor()"
+  [disabled]="deshabilitado()"
+  [attr.aria-invalid]="invalida()"
+  (input)="escribir($event)"
+  (blur)="perderFoco()"
+/>

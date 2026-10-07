@@ -1,0 +1,36 @@
+@import './styles/gestion.css';
+@import './styles/final.css';
+@import './styles/presentacion.css';
+@import './styles/fluo.css';
+
+:root {
+  --fondo-principal: #0b0714;
+  --fondo-caja: rgba(23, 17, 38, 0.88);
+  --fondo-input: rgba(11, 7, 20, 0.92);
+
+  --texto-principal: #f5f3ff;
+  --texto-secundario: #c4b5fd;
+
+  --violeta: #8b5cf6;
+  --rosa: #fc0176;
+  --celeste: #00e5ff;
+  --lima: #b7ff36;
+  --coral: #fb7185;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--fondo-principal);
+  color: var(--texto-principal);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}

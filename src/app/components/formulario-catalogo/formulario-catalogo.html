@@ -1,0 +1,112 @@
+<section class="panel">
+  <h2>{{ titulo() }}</h2>
+  <form
+    class="form-gestion"
+    [attr.id]="idFormulario() || null"
+    [formGroup]="formulario"
+    (ngSubmit)="guardar()"
+    novalidate
+  >
+    <div class="campos-catalogo">
+      @for (campo of campos(); track campo.nombre) {
+        <div
+          class="campo-gestion"
+          [class.campo-checkbox]="campo.tipo === 'checkbox'"
+          [class.ancho-completo]="
+            campo.anchoCompleto ||
+            campo.tipo === 'textarea' ||
+            campo.tipo === 'checkbox' ||
+            campo.tipo === 'generos'
+          "
+        >
+          <label [for]="'gestion-' + campo.nombre">{{ campo.etiqueta }}</label>
+          @switch (campo.tipo) {
+            @case ('date') {
+              <input
+                [id]="'gestion-' + campo.nombre"
+                type="text"
+                inputmode="numeric"
+                placeholder="dd/mm/aaaa"
+                maxlength="10"
+                [formControlName]="campo.nombre"
+                [attr.aria-invalid]="
+                  formulario.controls[campo.nombre].invalid &&
+                  formulario.controls[campo.nombre].touched
+                "
+              />
+            }
+            @case ('generos') {
+              <input
+                [id]="'gestion-' + campo.nombre"
+                type="text"
+                [formControlName]="campo.nombre"
+                placeholder="Elegí abajo o escribí géneros separados por coma"
+              />
+              <div class="opciones-generos" aria-label="Géneros del catálogo">
+                @for (opcion of campo.opciones ?? []; track opcion.valor) {
+                  <button
+                    type="button"
+                    [class.activo]="tieneGenero(campo.nombre, opcion.etiqueta)"
+                    [attr.aria-pressed]="tieneGenero(campo.nombre, opcion.etiqueta)"
+                    (click)="elegirGenero(campo.nombre, opcion.etiqueta)"
+                  >
+                    {{ opcion.etiqueta }}
+                  </button>
+                }
+              </div>
+            }
+            @case ('textarea') {
+              <textarea
+                [id]="'gestion-' + campo.nombre"
+                [formControlName]="campo.nombre"
+                rows="3"
+              ></textarea>
+            }
+            @case ('select') {
+              <select [id]="'gestion-' + campo.nombre" [formControlName]="campo.nombre">
+                <option value="">Elegí una opción</option>
+                @for (opcion of campo.opciones ?? []; track opcion.valor) {
+                  <option [ngValue]="opcion.valor">{{ opcion.etiqueta }}</option>
+                }
+              </select>
+            }
+            @case ('checkbox') {
+              <input
+                [id]="'gestion-' + campo.nombre"
+                type="checkbox"
+                [formControlName]="campo.nombre"
+              />
+            }
+            @default {
+              <input
+                [id]="'gestion-' + campo.nombre"
+                [type]="campo.tipo"
+                [formControlName]="campo.nombre"
+                [attr.min]="campo.minimo ?? null"
+                [attr.max]="campo.maximo ?? null"
+                [attr.maxlength]="campo.tipo !== 'number' ? (campo.maximo ?? null) : null"
+                [attr.autocomplete]="campo.tipo === 'password' ? 'new-password' : 'off'"
+              />
+            }
+          }
+          @if (campo.ayuda) {
+            <small>{{ campo.ayuda }}</small>
+          }
+          <small class="error error-campo" aria-live="polite">
+            @if (
+              formulario.controls[campo.nombre].invalid && formulario.controls[campo.nombre].touched
+            ) {
+              {{ mensajeCampo(campo) }}
+            }
+          </small>
+        </div>
+      }
+    </div>
+    @if (mostrarAcciones()) {
+      <div class="acciones-gestion ancho-completo">
+        <button class="primario" type="submit">Guardar</button>
+        <button type="button" (click)="cancelado.emit()">Cancelar edición</button>
+      </div>
+    }
+  </form>
+</section>

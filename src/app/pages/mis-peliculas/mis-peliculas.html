@@ -1,0 +1,90 @@
+<main class="gestion mis-peliculas">
+  <header class="gestion-encabezado">
+    <div>
+      <p class="etiqueta-gestion">CINE SPECTADORES · MI HISTORIAL</p>
+      <h1>Mis películas</h1>
+      <p>
+        Tus funciones, pósters y calificaciones personales. Podés cancelar hasta dos horas antes de
+        una función que todavía no utilizaste.
+      </p>
+    </div>
+    <button type="button" [disabled]="cargando() || procesando()" (click)="actualizar()">
+      Actualizar
+    </button>
+  </header>
+  <div class="pestanas-gestion" role="group" aria-label="Filtrar mis películas">
+    <button type="button" [class.activo]="filtro() === 'vistas'" (click)="filtro.set('vistas')">
+      Vistas</button
+    ><button
+      type="button"
+      [class.activo]="filtro() === 'proximas'"
+      (click)="filtro.set('proximas')"
+    >
+      Próximas funciones</button
+    ><button
+      type="button"
+      [class.activo]="filtro() === 'canceladas'"
+      (click)="filtro.set('canceladas')"
+    >
+      Canceladas
+    </button>
+  </div>
+  <p class="estado-carga" [class.error]="error()" role="status">
+    {{ cargando() ? 'Cargando tu historial…' : procesando() ? 'Procesando…' : mensaje() }}
+  </p>
+  @if (!cargando()) {
+    <section class="grilla-historial">
+      @for (v of filtradas(); track v.entrada.codigo) {
+        <article class="panel pelicula-historial">
+          <img
+            class="poster-historial"
+            [src]="v.poster"
+            [alt]="'Póster de ' + v.entrada.pelicula"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
+          <div class="historial-datos">
+            <h2>{{ v.entrada.pelicula }}</h2>
+            <p>{{ v.entrada.fecha }} · {{ v.entrada.hora }} hs · Sala {{ v.entrada.salaNumero }}</p>
+            <p>{{ v.entrada.formato }} · {{ v.entrada.idioma }}</p>
+            <p><strong>Butacas:</strong> {{ v.entrada.butacas.join(', ') }}</p>
+            <p class="calificacion-propia">
+              Mi calificación:
+              {{ v.puntajePropio ? '★ ' + v.puntajePropio + '/5' : 'Todavía no la calificaste' }}
+            </p>
+            <code class="codigo-historial">{{ v.entrada.codigo }}</code>
+            @if (v.cancelacion) {
+              <p class="estado-gestion">
+                Cancelada · Crédito ${{ v.cancelacion.credito.toLocaleString('es-AR') }}
+              </p>
+            } @else {
+              <p>Total: ${{ v.entrada.total.toLocaleString('es-AR') }}</p>
+              <div class="acciones-gestion">
+                <a class="boton-gestion" [routerLink]="['/pelicula', v.entrada.peliculaId]">{{
+                  v.puntajePropio ? 'Editar reseña' : 'Calificar película'
+                }}</a
+                ><button type="button" [disabled]="procesando()" (click)="descargar(v)">
+                  Entrada PDF
+                </button>
+                @if (puedeCancelar(v)) {
+                  <button
+                    type="button"
+                    class="peligro"
+                    [disabled]="procesando()"
+                    (click)="cancelar(v)"
+                  >
+                    Cancelar compra
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </article>
+      } @empty {
+        <p class="panel">
+          No tenés películas en esta sección. <a routerLink="/">Ir a la cartelera</a>
+        </p>
+      }
+    </section>
+  }
+</main>

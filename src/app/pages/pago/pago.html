@@ -1,0 +1,503 @@
+<main>
+  <section class="pago">
+    @if (cargando()) {
+      <p class="estado-carga" role="status">Cargando los precios de tu compra…</p>
+    } @else if (falloCarga()) {
+      <p class="mensaje-cupon cupon-error" role="alert">{{ falloCarga() }}</p>
+      <button type="button" class="boton-pagar" (click)="cargarCompra()">Reintentar</button>
+      <button type="button" class="boton-cancelar-pago" (click)="cancelarCompra()">
+        Cancelar compra
+      </button>
+    } @else if (!pagoAprobado) {
+      <header class="pago-encabezado">
+        <a class="boton-volver" routerLink="/confirmacion">Volver</a>
+        <p class="pago-etiqueta">PAGO SEGURO</p>
+
+        <h1>Completá los datos de pago</h1>
+
+        <p>Esta operación es una simulación. No ingreses una tarjeta real.</p>
+        @if (funcion?.esPreventa) {
+          <p class="aviso-preventa">
+            Preventa · entrada base ${{ funcion!.precio.toLocaleString('es-AR') }}. Precio normal
+            ${{ funcion!.precioNormal!.toLocaleString('es-AR') }} desde el estreno.
+          </p>
+        }
+      </header>
+
+      <div class="pago-layout">
+        <section class="panel-pago beneficios-pago">
+          <h2>Promos y puntos</h2>
+          <div class="contenido-pago">
+            <fieldset class="beneficios-compra" [disabled]="procesando()">
+              <legend>Armá tu combo</legend>
+              <p>Una entrada + pochoclos + bebida a precio fijo. El adicional VIP se conserva.</p>
+              <div class="seleccion-combo">
+                <div class="campo-beneficio">
+                  <label for="comboCompra">Elegí tu promoción</label>
+                  <select id="comboCompra" [(ngModel)]="comboId" (ngModelChange)="cambiarCombo()">
+                    <option [ngValue]="undefined">Sin combo</option>
+                    @for (combo of combos(); track combo.id) {
+                      @if (combo.activo) {
+                        <option [ngValue]="combo.id">
+                          {{ combo.nombre }} · ${{ combo.precio.toLocaleString('es-AR') }}
+                        </option>
+                      }
+                    }
+                  </select>
+                </div>
+                <div class="campo-beneficio cantidad-beneficio">
+                  <label for="cantidadCombos">Cantidad</label>
+                  <input
+                    id="cantidadCombos"
+                    type="number"
+                    min="0"
+                    [max]="maximoCombos"
+                    [disabled]="!comboId || maximoCombos === 0"
+                    [(ngModel)]="cantidadCombos"
+                    (ngModelChange)="cambiarCombo()"
+                  />
+                </div>
+              </div>
+            </fieldset>
+            @if (hayUsuarioIniciado) {
+              <fieldset class="beneficios-compra" [disabled]="procesando()">
+                <legend>Canjeá tus puntos</legend>
+                <div class="saldo-puntos-pago" aria-live="polite">
+                  <div>
+                    <span>Disponibles</span
+                    ><strong>{{ puntosDisponibles.toLocaleString('es-AR') }}</strong>
+                  </div>
+                  <div>
+                    <span>Usados</span
+                    ><strong>{{
+                      cotizacionValida() ? puntosUsados.toLocaleString('es-AR') : '—'
+                    }}</strong>
+                  </div>
+                  <div>
+                    <span>Quedan</span
+                    ><strong>{{
+                      cotizacionValida() ? puntosRestantes.toLocaleString('es-AR') : '—'
+                    }}</strong>
+                  </div>
+                </div>
+                <p>Los puntos seleccionados se descuentan al confirmar la compra.</p>
+                <div class="lista-recompensas">
+                  @for (recompensa of recompensas(); track recompensa.id) {
+                    @if (recompensa.activa) {
+                      <div class="recompensa-canje">
+                        <label [for]="'canje-' + recompensa.id">
+                          <span>{{ recompensa.nombre }}</span>
+                          <small
+                            >{{ recompensa.puntos.toLocaleString('es-AR') }} puntos por
+                            unidad</small
+                          >
+                        </label>
+                        <div class="cantidad-canje">
+                          <span aria-hidden="true">Cantidad</span>
+                          <input
+                            [id]="'canje-' + recompensa.id"
+                            [attr.aria-label]="'Cantidad de ' + recompensa.nombre"
+                            type="number"
+                            min="0"
+                            [max]="maximoCanje(recompensa)"
+                            [ngModel]="cantidadesCanje[recompensa.id] || 0"
+                            (ngModelChange)="
+                              cantidadesCanje[recompensa.id] = $event; cambiarCanjes(recompensa.id)
+                            "
+                          />
+                        </div>
+                      </div>
+                    }
+                  } @empty {
+                    <p>No hay recompensas disponibles por el momento.</p>
+                  }
+                </div>
+                <p class="ayuda-gestion">
+                  El canje de entrada cubre el precio base; el adicional VIP se paga. Los puntos son
+                  personales.
+                </p>
+              </fieldset>
+            }
+            @if (hayUsuarioIniciado) {
+              <fieldset class="beneficios-compra" [disabled]="procesando()">
+                <legend>Crédito de tu cuenta</legend>
+                <p>
+                  Disponible: <strong>${{ creditoDisponible.toLocaleString('es-AR') }}</strong
+                  >. El resto se paga con la tarjeta simulada.
+                </p>
+                <label class="opcion-credito"
+                  ><input
+                    type="checkbox"
+                    [(ngModel)]="usarCredito"
+                    (ngModelChange)="cambiarCredito()"
+                    [disabled]="creditoDisponible === 0"
+                  />
+                  Usar mi crédito en esta compra</label
+                >
+              </fieldset>
+            }
+          </div>
+        </section>
+        <form class="formulario-pago" [formGroup]="formularioPago" (ngSubmit)="procesarPago()">
+          <section class="panel-pago tarjeta-pago">
+            <h2>Datos de pago</h2>
+            <div class="contenido-pago">
+              <fieldset class="datos-pago" [disabled]="procesando()">
+                <div class="campo campo-completo cupon-pago">
+                  <label for="codigoCupon"> ¿Tenés un cupón? </label>
+
+                  <div class="cupon-controles">
+                    <input
+                      id="codigoCupon"
+                      type="text"
+                      formControlName="codigoCupon"
+                      placeholder="Ingresá tu código"
+                      autocomplete="off"
+                    />
+
+                    <button type="button" class="boton-aplicar-cupon" (click)="aplicarCupon()">
+                      Aplicar
+                    </button>
+                  </div>
+
+                  <div class="reserva-mensaje-cupon" aria-live="polite">
+                    @if (mensajeCupon) {
+                      <small
+                        class="mensaje-cupon"
+                        [class.cupon-valido]="cuponAplicado"
+                        [class.cupon-error]="!cuponAplicado"
+                      >
+                        {{ mensajeCupon }}
+                      </small>
+                    }
+                  </div>
+
+                  @if (!hayUsuarioIniciado) {
+                    <a
+                      class="enlace-iniciar-sesion"
+                      routerLink="/inicio-sesion"
+                      [queryParams]="{ returnUrl: '/pago' }"
+                    >
+                      Iniciar sesión para utilizar beneficios
+                    </a>
+                  }
+                </div>
+
+                @if (totalTarjeta > 0 || !cotizacionValida()) {
+                  <button
+                    type="button"
+                    class="boton-datos-prueba campo-completo"
+                    (click)="usarTarjetaDePrueba()"
+                  >
+                    Completar con datos de prueba
+                  </button>
+                  <div class="campo campo-completo">
+                    <label for="nombreTitular"> Nombre del titular </label>
+
+                    <input
+                      id="nombreTitular"
+                      type="text"
+                      formControlName="nombreTitular"
+                      maxlength="80"
+                      placeholder="Como aparece en la tarjeta"
+                      autocomplete="cc-name"
+                      (input)="limpiarNombreTitular()"
+                    />
+
+                    <div class="reserva-error-pago" aria-live="polite">
+                      @if (
+                        formularioPago.controls.nombreTitular.touched &&
+                        formularioPago.controls.nombreTitular.invalid
+                      ) {
+                        <small> Ingresá un nombre de al menos dos letras. </small>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="campo campo-completo">
+                    <label for="numeroTarjeta"> Número de tarjeta </label>
+
+                    <input
+                      id="numeroTarjeta"
+                      type="text"
+                      inputmode="numeric"
+                      maxlength="23"
+                      formControlName="numeroTarjeta"
+                      placeholder="4242424242424242"
+                      autocomplete="cc-number"
+                      (input)="formatearNumeroTarjeta()"
+                    />
+
+                    <div class="reserva-error-pago" aria-live="polite">
+                      @if (
+                        formularioPago.controls.numeroTarjeta.touched &&
+                        formularioPago.controls.numeroTarjeta.invalid
+                      ) {
+                        @if (formularioPago.controls.numeroTarjeta.hasError('tarjetaInvalida')) {
+                          <small>El número de tarjeta no es válido.</small>
+                        } @else {
+                          <small>El número debe tener exactamente 16 dígitos.</small>
+                        }
+                      }
+                    </div>
+                  </div>
+
+                  <div class="campo">
+                    <label for="vencimiento"> Vencimiento </label>
+
+                    <input
+                      id="vencimiento"
+                      type="text"
+                      inputmode="numeric"
+                      maxlength="5"
+                      formControlName="vencimiento"
+                      placeholder="MM/AA"
+                      autocomplete="cc-exp"
+                      (input)="formatearVencimiento()"
+                    />
+
+                    <div class="reserva-error-pago" aria-live="polite">
+                      @if (
+                        formularioPago.controls.vencimiento.touched &&
+                        formularioPago.controls.vencimiento.invalid
+                      ) {
+                        @if (formularioPago.controls.vencimiento.hasError('tarjetaVencida')) {
+                          <small>La tarjeta está vencida.</small>
+                        } @else {
+                          <small>Ingresá una fecha con formato MM/AA.</small>
+                        }
+                      }
+                    </div>
+                  </div>
+
+                  <div class="campo">
+                    <label for="codigoSeguridad"> Código de seguridad </label>
+
+                    <input
+                      id="codigoSeguridad"
+                      type="password"
+                      inputmode="numeric"
+                      maxlength="3"
+                      formControlName="codigoSeguridad"
+                      placeholder="123"
+                      autocomplete="cc-csc"
+                      (input)="formatearCodigoSeguridad()"
+                    />
+
+                    <div class="reserva-error-pago" aria-live="polite">
+                      @if (
+                        formularioPago.controls.codigoSeguridad.touched &&
+                        formularioPago.controls.codigoSeguridad.invalid
+                      ) {
+                        <small> El código debe tener exactamente 3 dígitos. </small>
+                      }
+                    </div>
+                  </div>
+                } @else {
+                  <p class="campo-completo aviso-credito">
+                    {{
+                      total === 0
+                        ? 'Tu compra está cubierta por los beneficios. No necesitás ingresar datos de tarjeta.'
+                        : 'Tu crédito cubre toda la compra. No necesitás ingresar datos de tarjeta.'
+                    }}
+                  </p>
+                }
+              </fieldset>
+            </div>
+          </section>
+          <section class="panel-pago resumen-compra-pago">
+            <h2>Resumen de tu compra</h2>
+            <div class="contenido-pago">
+              @if (pelicula(); as encontrada) {
+                <div class="detalle-compra-pago">
+                  <h3>{{ encontrada.nombre }}</h3>
+                  <p>
+                    {{ funcion?.fecha }} · {{ funcion?.hora }} hs · Sala {{ funcion?.salaNumero }}
+                  </p>
+                  <p>{{ funcion?.formato }} · {{ funcion?.idioma }}</p>
+                  <p><strong>Butacas:</strong> {{ butacasSeleccionadas.join(', ') }}</p>
+                  <div class="lista-entradas-pago" aria-live="polite">
+                    @for (detalle of detalleEntradas; track detalle.id) {
+                      <div class="entrada-pago" [class.entrada-canjeada]="detalle.canjeada">
+                        <div>
+                          <strong>Butaca {{ detalle.id }}</strong>
+                          <small>{{
+                            detalle.canjeada
+                              ? 'Canjeada con ' + detalle.puntos + ' puntos'
+                              : detalle.enCombo
+                                ? 'Incluida en combo'
+                                : 'Entrada a pagar'
+                          }}</small>
+                          @if (detalle.canjeada && detalle.importe > 0) {
+                            <small>Adicional VIP pendiente</small>
+                          }
+                        </div>
+                        <div class="importe-entrada-pago">
+                          @if (detalle.canjeada) {
+                            <s>${{ detalle.precio.toLocaleString('es-AR') }}</s>
+                          }
+                          <strong>{{
+                            detalle.enCombo
+                              ? 'En combo'
+                              : '$' + detalle.importe.toLocaleString('es-AR')
+                          }}</strong>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+              <div class="resumen-pago">
+                @if (cotizacionValida()) {
+                  <div class="conceptos-compra">
+                    <div class="fila-pago">
+                      <span>Entradas ({{ butacasSeleccionadas.length }})</span>
+                      <strong>${{ totalEntradasSinPromocion.toLocaleString('es-AR') }}</strong>
+                    </div>
+                    @for (item of productosCandy; track item.productoId) {
+                      <div class="fila-pago">
+                        <span>{{ item.cantidad }} × {{ item.nombre }}</span>
+                        <strong>${{ item.subtotal.toLocaleString('es-AR') }}</strong>
+                      </div>
+                    }
+                  </div>
+                  <div class="fila-pago">
+                    <span>Subtotal sin promociones</span>
+
+                    <strong> ${{ subtotal.toLocaleString('es-AR') }} </strong>
+                  </div>
+
+                  @if (ahorroCombo !== 0) {
+                    <div class="fila-pago descuento-pago">
+                      <span
+                        >{{ ahorroCombo > 0 ? 'Ahorro del combo' : 'Diferencia por combo' }} ({{
+                          cantidadCombos
+                        }}
+                        × ${{ precioCombo.toLocaleString('es-AR') }})</span
+                      ><strong
+                        >{{ ahorroCombo > 0 ? '−' : '+' }}${{
+                          (ahorroCombo < 0 ? -ahorroCombo : ahorroCombo).toLocaleString('es-AR')
+                        }}</strong
+                      >
+                    </div>
+                  }
+                  @if (descuentoCanjes > 0) {
+                    <div class="fila-pago descuento-pago">
+                      <span>Canjes ({{ puntosUsados.toLocaleString('es-AR') }} puntos)</span
+                      ><strong>−${{ descuentoCanjes.toLocaleString('es-AR') }}</strong>
+                    </div>
+                  }
+                  @if (descuentoPrimeraCompra > 0 && descuentoPrimeraCompra >= descuentoCupon) {
+                    <div class="fila-pago descuento-pago">
+                      <span> Descuento primera compra ({{ porcentajeDescuento }}%) </span>
+
+                      <strong> −${{ descuentoPrimeraCompra.toLocaleString('es-AR') }} </strong>
+                    </div>
+                  } @else if (descuentoCupon > 0 && cuponAplicado) {
+                    <div class="fila-pago descuento-pago">
+                      <span>
+                        Cupón {{ cuponAplicado.codigo }} ({{ cuponAplicado.porcentajeDescuento }}%)
+                      </span>
+
+                      <strong> −${{ descuentoCupon.toLocaleString('es-AR') }} </strong>
+                    </div>
+                  }
+
+                  <div class="fila-pago total-pago">
+                    <span>Total a pagar</span>
+
+                    <strong> ${{ total.toLocaleString('es-AR') }} </strong>
+                  </div>
+                  @if (creditoAplicado > 0) {
+                    <div class="fila-pago descuento-pago">
+                      <span>Crédito aplicado</span
+                      ><strong>−${{ creditoAplicado.toLocaleString('es-AR') }}</strong>
+                    </div>
+                    <div class="fila-pago">
+                      <span>Saldo con tarjeta</span
+                      ><strong>${{ totalTarjeta.toLocaleString('es-AR') }}</strong>
+                    </div>
+                  }
+                } @else {
+                  <p class="resumen-pendiente">
+                    Revisá los beneficios seleccionados para calcular el total.
+                  </p>
+                  <div class="fila-pago total-pago">
+                    <span>Total a pagar</span><strong>—</strong>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="confirmar-pago">
+              <p class="mensaje-cupon cupon-error mensaje-pago-reservado" role="alert">
+                {{ mensajePago() }}
+              </p>
+              <button
+                type="submit"
+                class="boton-pagar"
+                [disabled]="formularioPago.invalid || procesando() || !cotizacionValida()"
+              >
+                {{
+                  procesando()
+                    ? 'Procesando…'
+                    : !cotizacionValida()
+                      ? 'Revisá la selección'
+                      : totalTarjeta === 0
+                        ? 'Confirmar compra'
+                        : 'Pagar $' + totalTarjeta.toLocaleString('es-AR')
+                }}
+                <span>→</span>
+              </button>
+              <button
+                type="button"
+                class="boton-cancelar-pago"
+                [disabled]="procesando()"
+                (click)="cancelarCompra()"
+              >
+                Cancelar compra
+              </button>
+            </div>
+          </section>
+        </form>
+      </div>
+    } @else {
+      <div class="pago-exitoso">
+        <span class="pago-exitoso-icono" aria-hidden="true"> ✓ </span>
+
+        <p class="pago-etiqueta">PAGO APROBADO</p>
+
+        <h1>¡Compra realizada con éxito!</h1>
+
+        <p class="codigo-compra">Código: {{ codigoEntrada }}</p>
+        <p>El pago fue aprobado y tus butacas quedaron reservadas.</p>
+        @if ((entrada?.creditoUtilizado ?? 0) > 0) {
+          <p>
+            Crédito utilizado: ${{ entrada?.creditoUtilizado?.toLocaleString('es-AR') }} · Tarjeta:
+            ${{ entrada?.pagoTarjeta?.toLocaleString('es-AR') }}
+          </p>
+        }
+        @if ((entrada?.puntosGanados ?? 0) > 0) {
+          <p>Ganaste {{ entrada?.puntosGanados }} puntos.</p>
+        }
+        @if ((entrada?.puntosUsados ?? 0) > 0) {
+          <p>Canjeaste {{ entrada?.puntosUsados }} puntos.</p>
+        }
+        @if (hayUsuarioIniciado) {
+          <a routerLink="/perfil">Ver mis puntos y canjes</a>
+        }
+
+        <div class="acciones-pago-exitoso">
+          <button type="button" class="boton-pagar" (click)="descargarEntrada()">
+            Descargar entrada PDF
+            <span>↓</span>
+          </button>
+
+          <a class="boton-pagar boton-cartelera" routerLink="/">
+            Volver a la cartelera
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    }
+  </section>
+</main>

@@ -1,0 +1,271 @@
+<main class="gestion empleados">
+  <header class="gestion-encabezado">
+    <div>
+      <p class="etiqueta-gestion">CINE SPECTADORES · EMPLEADOS</p>
+      <h1>Validación de compras</h1>
+      <p>Escaneá el QR, revisá la compra y confirmá su uso.</p>
+    </div>
+  </header>
+  <div class="pestanas-gestion">
+    <button
+      type="button"
+      [disabled]="procesando()"
+      [class.activo]="sector === 'cine'"
+      (click)="cambiarSector('cine')"
+    >
+      Ingreso al cine
+    </button>
+    <button
+      type="button"
+      [disabled]="procesando()"
+      [class.activo]="sector === 'candy'"
+      (click)="cambiarSector('candy')"
+    >
+      Entrega de Candy Bar
+    </button>
+  </div>
+  <div class="estado-operacion" [class.error]="error()" role="status" aria-live="polite">
+    {{ mensaje() || 'Mostrá un QR frente a la cámara o ingresá su código.' }}
+  </div>
+
+  <div class="empleados-paneles">
+    <section class="panel empleados-panel panel-lector" aria-labelledby="titulo-lector">
+      <header class="cabecera-panel">
+        <span class="paso-panel">01 · LECTURA</span>
+        <h2 id="titulo-lector">Lector QR</h2>
+        <p>La cámara permanece encendida.</p>
+      </header>
+      <div class="contenido-panel">
+        <app-lector-qr
+          class="lector-compacto"
+          [bloqueado]="procesando()"
+          [contexto]="sector"
+          (codigoLeido)="leerCodigo($event)"
+        ></app-lector-qr>
+      </div>
+      <footer class="pie-panel">
+        <form class="buscar-manual" (ngSubmit)="buscar()">
+          <label for="codigoManual">Código manual</label>
+          <div class="fila-busqueda">
+            <input
+              id="codigoManual"
+              name="codigoManual"
+              [(ngModel)]="codigo"
+              (ngModelChange)="limpiarBusqueda()"
+              [disabled]="procesando()"
+              autocomplete="off"
+              placeholder="CINE-…"
+              required
+            />
+            <button type="submit" [disabled]="!codigo.trim() || procesando()">Buscar compra</button>
+          </div>
+        </form>
+      </footer>
+    </section>
+
+    <section class="panel empleados-panel panel-mapa" aria-labelledby="titulo-mapa">
+      <header class="cabecera-panel">
+        <span class="paso-panel">02 · {{ sector === 'cine' ? 'UBICACIÓN' : 'PEDIDO' }}</span>
+        <h2 id="titulo-mapa">
+          {{ sector === 'cine' ? 'Mapa de la sala' : 'Productos para entregar' }}
+        </h2>
+        <p>
+          @if (venta(); as encontrada) {
+            {{
+              sector === 'cine'
+                ? 'Sala ' + encontrada.entrada.salaNumero
+                : encontrada.entrada.productosCandy.length + ' tipos de productos'
+            }}
+          } @else {
+            Esperando una compra
+          }
+        </p>
+      </header>
+      <div
+        class="contenido-panel mapa-ubicaciones"
+        role="region"
+        [attr.aria-label]="
+          sector === 'cine' ? 'Ubicación de las butacas compradas' : 'Productos de Candy Bar'
+        "
+        tabindex="0"
+      >
+        @if (venta(); as encontrada) {
+          @if (sector === 'cine') {
+            @if (filasButacas().length > 0) {
+              <p class="pantalla-ubicaciones">PANTALLA</p>
+              <app-mapa-butacas
+                class="mapa-ajustado"
+                [filas]="filasButacas()"
+                [butacasSeleccionadas]="encontrada.entrada.butacas"
+                [soloLectura]="true"
+              ></app-mapa-butacas>
+            } @else {
+              <p class="ayuda-gestion">
+                La distribución de la sala {{ encontrada.entrada.salaNumero }} no está disponible.
+                Usá la lista de ubicaciones.
+              </p>
+            }
+          } @else {
+            <ul class="productos-entrega">
+              @for (item of encontrada.entrada.productosCandy; track item.productoId) {
+                <li>
+                  <strong>{{ item.cantidad }} ×</strong><span>{{ item.nombre }}</span>
+                </li>
+              } @empty {
+                <li>Esta compra no incluye productos del Candy Bar.</li>
+              }
+            </ul>
+          }
+        } @else {
+          <div class="panel-vacio">
+            <span aria-hidden="true">{{ sector === 'cine' ? '▦' : '◇' }}</span>
+            <p>
+              {{
+                sector === 'cine'
+                  ? 'El mapa aparecerá cuando encuentres una
+            compra.'
+                  : 'Los productos aparecerán cuando encuentres una compra.'
+              }}
+            </p>
+          </div>
+        }
+      </div>
+      <footer class="pie-panel referencias-ubicaciones">
+        @if (sector === 'cine') {
+          <span><i class="asiento-compra" aria-hidden="true"></i>Esta compra</span>
+          <span><i class="asiento-resto" aria-hidden="true"></i>Común</span>
+          <span><i class="asiento-vip" aria-hidden="true"></i>VIP</span>
+          <span><i class="asiento-accesible" aria-hidden="true"></i>Accesible</span>
+        } @else {
+          <p class="ayuda-gestion">Revisá las cantidades antes de confirmar la entrega.</p>
+        }
+      </footer>
+    </section>
+
+    <section class="panel empleados-panel detalle-validacion" aria-labelledby="titulo-detalles">
+      <header class="cabecera-panel">
+        <span class="paso-panel">03 · CONFIRMACIÓN</span>
+        <h2 id="titulo-detalles">
+          {{
+            sector === 'cine'
+              ? 'Detalle de las entradas'
+              : 'Detalle de la
+          entrega'
+          }}
+        </h2>
+        <p>
+          {{
+            sector === 'cine'
+              ? 'Fila, número y tipo de butaca.'
+              : 'Estado del
+          pedido de Candy Bar.'
+          }}
+        </p>
+      </header>
+      <div class="contenido-panel">
+        @if (venta(); as encontrada) {
+          @if (sector === 'cine') {
+            <h3 class="titulo-pelicula">{{ encontrada.entrada.pelicula }}</h3>
+            <p class="datos-compra">
+              {{ encontrada.entrada.fecha }} · {{ encontrada.entrada.hora }} hs · Sala
+              {{ encontrada.entrada.salaNumero }}
+            </p>
+            <p class="datos-compra">
+              {{ encontrada.entrada.formato }} · {{ encontrada.entrada.idioma }}
+            </p>
+            <div class="fila-gestion">
+              <span>Ingreso al cine</span
+              ><strong
+                class="estado-uso"
+                [class.usado]="encontrada.ingreso && !encontrada.cancelacion"
+                [class.cancelado]="encontrada.cancelacion"
+                >{{
+                  encontrada.cancelacion
+                    ? 'Cancelada'
+                    : encontrada.ingreso
+                      ? 'Ya validado'
+                      : 'Pendiente'
+                }}</strong
+              >
+            </div>
+            <ul class="ubicaciones-entradas">
+              @for (ubicacion of ubicaciones(); track ubicacion.id) {
+                <li>
+                  <strong>{{ ubicacion.id }}</strong>
+                  <div>
+                    <span>{{ ubicacion.detalle }}</span>
+                    @if (ubicacion.tipo) {
+                      <small>{{ ubicacion.tipo === 'Comun' ? 'Común' : ubicacion.tipo }}</small>
+                    }
+                  </div>
+                </li>
+              }
+            </ul>
+            @if ((encontrada.entrada.edadMinima ?? 0) > 0) {
+              <p class="ayuda-gestion">
+                Clasificación +{{ encontrada.entrada.edadMinima }}. Debe asistir un adulto.
+              </p>
+            }
+          } @else {
+            <div class="fila-gestion">
+              <span>Entrega de Candy Bar</span
+              ><strong
+                class="estado-uso"
+                [class.usado]="encontrada.candy && !encontrada.cancelacion"
+                [class.cancelado]="encontrada.cancelacion"
+                >{{
+                  encontrada.cancelacion
+                    ? 'Cancelada'
+                    : encontrada.entrada.productosCandy.length === 0
+                      ? 'Sin productos'
+                      : encontrada.candy
+                        ? 'Ya entregado'
+                        : 'Pendiente'
+                }}</strong
+              >
+            </div>
+            <p class="ayuda-gestion">
+              {{ encontrada.entrada.productosCandy.length }} tipos de productos en este pedido.
+            </p>
+            <p class="ayuda-gestion">
+              Confirmá cuando hayas entregado todos los productos de la lista central.
+            </p>
+          }
+        } @else {
+          <div class="panel-vacio">
+            <span aria-hidden="true">✓</span>
+            <p>Los detalles aparecerán cuando encuentres una compra.</p>
+          </div>
+        }
+      </div>
+      <footer class="pie-panel">
+        <p class="codigo-validacion">
+          {{ venta()?.entrada?.codigo || 'Sin compra seleccionada' }}
+        </p>
+        <button
+          class="primario confirmar-uso"
+          type="button"
+          [disabled]="
+            procesando() ||
+            !venta() ||
+            yaUtilizado ||
+            (sector === 'candy' && (venta()?.entrada?.productosCandy?.length ?? 0) === 0)
+          "
+          (click)="validar()"
+        >
+          {{
+            procesando()
+              ? 'Procesando…'
+              : venta()?.cancelacion
+                ? 'Compra cancelada'
+                : yaUtilizado
+                  ? 'Ya utilizado'
+                  : sector === 'cine'
+                    ? 'Confirmar ingreso'
+                    : 'Confirmar entrega'
+          }}
+        </button>
+      </footer>
+    </section>
+  </div>
+</main>

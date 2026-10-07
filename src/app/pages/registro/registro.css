@@ -1,0 +1,307 @@
+main {
+  display: grid;
+  min-height: calc(100vh - 65px);
+  place-items: center;
+  padding: 36px 24px;
+}
+
+.registro-layout {
+  display: grid;
+  width: min(100%, 1240px);
+  height: 750px;
+  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgb(139 92 246 / 45%);
+  border-radius: 18px;
+  background-color: var(--fondo-caja);
+  box-shadow: 0 0 35px rgb(139 92 246 / 20%);
+}
+
+.marca-panel {
+  position: relative;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 34px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(180deg, rgb(11 7 20 / 20%), rgb(11 7 20 / 90%)),
+    url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=85');
+  background-position: center;
+  background-size: cover;
+}
+
+.marca-panel::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgb(139 92 246 / 45%), transparent 55%);
+  content: '';
+  pointer-events: none;
+}
+
+.marca-contenido,
+.marca-pie {
+  position: relative;
+  z-index: 1;
+}
+.marca-contenido {
+  max-width: 320px;
+}
+
+.marca-etiqueta,
+.form-etiqueta {
+  margin: 0 0 10px;
+  color: var(--celeste);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.marca-contenido h2 {
+  margin: 0;
+  color: white;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.05;
+}
+
+.marca-contenido p:last-child {
+  margin: 18px 0 0;
+  color: #ddd6fe;
+  line-height: 1.5;
+}
+
+.marca-pie {
+  margin: 0;
+  color: #ddd6fe;
+  font-size: 0.85rem;
+}
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+  min-height: 0;
+  padding: 40px 55px;
+  overflow-y: auto;
+  background: linear-gradient(145deg, rgb(45 31 72 / 95%), rgb(20 13 34 / 98%));
+}
+
+.encabezado-formulario {
+  margin-bottom: 24px;
+}
+
+.encabezado-formulario h1 {
+  margin: 0;
+  color: var(--texto-principal);
+  font-size: 2.3rem;
+}
+
+.encabezado-formulario p:last-child {
+  margin: 12px 0 0;
+  color: var(--texto-secundario);
+  font-size: 1.15rem;
+}
+
+form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+label {
+  margin-bottom: 8px;
+  color: var(--texto-principal);
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 2px solid rgb(139 92 246 / 70%);
+  border-radius: 8px;
+  outline: 0;
+  background-color: rgb(11 7 20 / 65%);
+  color: var(--texto-principal);
+  font-size: 1.15rem;
+}
+
+input::placeholder {
+  color: #a78bfa;
+  opacity: 0.65;
+}
+
+input:focus {
+  border-color: var(--celeste);
+  box-shadow: 0 0 10px rgb(34 211 238 / 30%);
+}
+
+input.ng-valid.ng-touched {
+  border-color: #4ade80;
+}
+
+input.ng-invalid.ng-touched {
+  border-color: var(--coral);
+}
+
+.campo-contrasena {
+  position: relative;
+}
+
+.campo-contrasena input {
+  padding-right: 52px;
+}
+
+.form-panel .boton-visor {
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  width: 37px;
+  height: 37px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: var(--texto-secundario);
+  cursor: pointer;
+}
+
+.form-panel .boton-visor:hover {
+  color: var(--celeste);
+}
+
+.mensaje-error {
+  margin: 7px 0 0;
+  color: var(--coral);
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+/* Espacio reservado (2 líneas) para que el error no empuje el contenido */
+.reserva-error {
+  min-height: 2.6em;
+}
+
+/* Zona fija para "Las contraseñas no coinciden" y el error general */
+.zona-errores {
+  min-height: 28px;
+}
+
+.boton-registro {
+  margin-top: 10px;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--violeta), var(--rosa));
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-registro:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.boton-registro:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.iniciar-sesion {
+  margin: 25px 0 0;
+  color: var(--texto-secundario);
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.iniciar-sesion a,
+.mensaje-exito a {
+  color: var(--celeste);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.iniciar-sesion a:hover,
+.mensaje-exito a:hover {
+  color: var(--rosa);
+  text-decoration: underline;
+}
+
+.mensaje-exito {
+  text-align: center;
+}
+
+.mensaje-exito h1 {
+  margin: 0;
+  color: var(--celeste);
+}
+
+.mensaje-exito p {
+  margin: 14px 0 24px;
+  color: var(--texto-secundario);
+}
+
+@media (max-width: 800px) {
+  main {
+    padding: 20px 16px;
+  }
+
+  .registro-layout {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .marca-panel {
+    min-height: 290px;
+  }
+
+  .form-panel {
+    padding: 32px 24px;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 520px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-completo {
+    grid-column: auto;
+  }
+
+  .form-panel {
+    padding: 30px 20px;
+  }
+}
+
+.reserva-error {
+  height: 38px;
+  min-height: 38px;
+  overflow: auto;
+  margin: 6px 0 0;
+  line-height: 18px;
+}
+.mensaje-fecha p {
+  margin: 0;
+}
+.zona-errores {
+  height: 56px;
+  overflow: auto;
+}

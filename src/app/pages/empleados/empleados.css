@@ -1,0 +1,312 @@
+:host {
+  display: block;
+}
+.empleados.gestion {
+  width: min(1600px, 100%);
+  padding: 26px 24px 36px;
+}
+.empleados .gestion-encabezado {
+  margin-bottom: 10px;
+  justify-content: center;
+  text-align: center;
+}
+.empleados .gestion-encabezado p {
+  margin: 0;
+}
+.empleados .gestion-encabezado h1 {
+  margin: 4px 0 6px;
+}
+.empleados .pestanas-gestion {
+  margin-bottom: 8px;
+}
+.estado-operacion {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto 10px;
+  padding: 6px 10px;
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  border-radius: 12px;
+  color: var(--celeste);
+  background: rgba(34, 211, 238, 0.035);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.estado-operacion.error {
+  color: var(--coral, #fb7185);
+  border-color: rgba(251, 113, 133, 0.35);
+  background: rgba(251, 113, 133, 0.05);
+}
+.empleados-paneles {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+.empleados .empleados-panel {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  box-sizing: border-box;
+}
+.cabecera-panel {
+  flex: 0 0 auto;
+  min-height: 80px;
+  box-sizing: border-box;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+.paso-panel {
+  display: block;
+  color: var(--celeste);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+.empleados .cabecera-panel h2 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.cabecera-panel p {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 0.78rem;
+}
+.empleados .contenido-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  padding: 12px;
+  overflow: visible;
+  scrollbar-gutter: auto;
+}
+.empleados .pie-panel {
+  display: grid;
+  justify-content: stretch;
+  justify-items: center;
+  align-content: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 0;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  overflow: visible;
+  background: rgba(8, 5, 15, 0.22);
+}
+.buscar-manual {
+  display: grid;
+  width: 100%;
+  gap: 6px;
+}
+.buscar-manual label {
+  color: var(--texto-secundario);
+  font-size: 0.78rem;
+  text-align: center;
+}
+.fila-busqueda {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+}
+.empleados .fila-busqueda input {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  height: 38px;
+  font-size: 0.78rem;
+}
+.empleados .fila-busqueda button {
+  flex-shrink: 0;
+  max-width: 90px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  padding: 8px 10px;
+  text-wrap: balance;
+}
+.empleados .mapa-ajustado {
+  width: 70%;
+  max-width: 760px;
+  margin-inline: auto;
+  /* Zoom reduce también la altura ocupada, sin dejar el espacio del mapa anterior. */
+  zoom: 0.7;
+}
+.pantalla-ubicaciones {
+  width: min(70%, 532px);
+  margin: 0 auto 8px;
+  padding: 6px;
+  text-align: center;
+  color: var(--texto-secundario);
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 6px;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+}
+.empleados .referencias-ubicaciones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 0.72rem;
+}
+.referencias-ubicaciones span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.referencias-ubicaciones i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.referencias-ubicaciones p {
+  margin: 0;
+}
+.asiento-compra {
+  background: #2563eb;
+  outline: 1px solid #93c5fd;
+}
+.asiento-resto {
+  background: #d1d5db;
+}
+.asiento-vip {
+  background: #fbbf24;
+}
+.asiento-accesible {
+  background: #86efac;
+}
+.empleados .titulo-pelicula {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.datos-compra {
+  color: var(--texto-secundario);
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+}
+.estado-uso {
+  color: var(--celeste);
+  font-size: 0.78rem;
+}
+.estado-uso.usado {
+  color: #4ade80;
+}
+.estado-uso.cancelado {
+  color: var(--coral, #fb7185);
+}
+.ubicaciones-entradas,
+.productos-entrega {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+.ubicaciones-entradas li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.08);
+}
+.ubicaciones-entradas strong {
+  color: #93c5fd;
+  font-size: 1rem;
+  min-width: 42px;
+}
+.ubicaciones-entradas div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.ubicaciones-entradas span {
+  font-size: 0.78rem;
+}
+.ubicaciones-entradas small {
+  font-size: 0.72rem;
+}
+.productos-entrega {
+  margin-top: 0;
+}
+.productos-entrega li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.18);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.productos-entrega strong {
+  color: var(--celeste);
+  min-width: 32px;
+}
+.empleados .codigo-validacion {
+  max-width: 100%;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: var(--celeste);
+  font-size: 0.68rem;
+}
+.empleados .confirmar-uso {
+  width: auto;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+}
+.panel-vacio {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--texto-secundario);
+  padding: 16px 8px;
+  box-sizing: border-box;
+  font-size: 0.85rem;
+}
+.panel-vacio > span {
+  color: rgba(139, 92, 246, 0.65);
+  font-size: 2.5rem;
+}
+.panel-vacio p {
+  margin: 0;
+  max-width: 240px;
+}
+@media (max-width: 1200px) {
+  .empleados-paneles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .empleados.gestion {
+    padding: 22px 16px 32px;
+  }
+  .empleados .gestion-encabezado {
+    align-items: center;
+  }
+}

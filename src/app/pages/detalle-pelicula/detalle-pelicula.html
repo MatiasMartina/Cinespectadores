@@ -1,0 +1,147 @@
+<main>
+  @if (mensajeCarga()) {
+    <p role="alert">{{ mensajeCarga() }}</p>
+  }
+  <div class="encabezado-detalle">
+    @if (!funcionFueCambiada()) {
+      <a class="boton-volver" [routerLink]="modoEdicion ? '/confirmacion' : '/'"> Volver </a>
+    }
+
+    <h1>Detalle de película</h1>
+  </div>
+  @if (cargando()) {
+    <p>Cargando película...</p>
+  } @else if (pelicula(); as peliculaEncontrada) {
+    <div class="detalle-layout">
+      <section class="detalle-pelicula">
+        <div class="poster-pelicula">
+          <img
+            [src]="peliculaEncontrada.imagenUrl"
+            [alt]="'Póster de ' + peliculaEncontrada.nombre"
+          />
+
+          <span class="clasificacion">
+            {{ peliculaEncontrada.edadMinima === 0 ? 'ATP' : '+' + peliculaEncontrada.edadMinima }}
+          </span>
+        </div>
+
+        <div class="informacion">
+          <p class="etiqueta">
+            {{
+              estadoPelicula === 'preventa'
+                ? 'PREVENTA'
+                : estadoPelicula === 'proximamente'
+                  ? 'PRÓXIMAMENTE'
+                  : estadoPelicula === 'oculta'
+                    ? 'FUERA DE CARTELERA'
+                    : 'EN CARTELERA'
+            }}
+          </p>
+          <h1>{{ peliculaEncontrada.nombre }}</h1>
+
+          <p class="sinopsis">{{ peliculaEncontrada.sinopsis }}</p>
+
+          <div class="datos-pelicula">
+            <p>
+              <span>Duración</span>
+              <strong>{{ peliculaEncontrada.duracionMinutos }} min</strong>
+            </p>
+
+            <p>
+              <span>Géneros</span>
+              <strong>{{ peliculaEncontrada.generos.join(', ') }}</strong>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      @if (estadoPelicula === 'preventa' || estadoPelicula === 'proximamente') {
+        <app-aviso-estreno [pelicula]="peliculaEncontrada" />
+      }
+      <section class="funciones">
+        <p class="etiqueta">ELEGÍ TU HORARIO</p>
+        <h2>Funciones disponibles</h2>
+
+        @if (funciones().length > 0) {
+          <div class="lista-funciones">
+            @for (funcion of funciones(); track funcion.id) {
+              <button
+                type="button"
+                class="funcion"
+                [class.funcion-activa]="funcionSeleccionada?.id === funcion.id"
+                (click)="seleccionarFuncion(funcion)"
+              >
+                <strong>{{ funcion.hora }} hs</strong>
+                <span class="fecha-funcion">{{ funcion.fecha | date: 'dd/MM/yyyy' }}</span>
+                <span>Sala {{ funcion.salaNumero }}</span>
+                <small> {{ funcion.formato }} · {{ funcion.idioma }} </small>
+                <b
+                  >${{ funcion.precio }}
+                  @if (funcion.esPreventa) {
+                    <span class="etiqueta-beneficio">Preventa</span>
+                  }
+                </b>
+              </button>
+            }
+          </div>
+        } @else {
+          <p class="mensaje-vacio">
+            {{
+              estadoPelicula === 'proximamente'
+                ? 'La venta todavía no comenzó. Activá una alerta para recibir el aviso.'
+                : 'No hay funciones disponibles para esta película.'
+            }}
+          </p>
+        }
+      </section>
+
+      <section class="mapa-disponibilidad">
+        @if (funcionSeleccionada; as funcion) {
+          <header class="mapa-encabezado">
+            <div>
+              <p class="etiqueta">DISPONIBILIDAD EN VIVO</p>
+              <h2>Butacas de Sala {{ funcion.salaNumero }}</h2>
+            </div>
+
+            <span class="horario-seleccionado">{{ funcion.hora }} hs</span>
+          </header>
+
+          <div class="referencias-mini">
+            <span><i class="disponible"></i> Disponible</span>
+            <span><i class="ocupada"></i> Reservada</span>
+            <span><i class="comun"></i> Común</span>
+            <span><i class="accesible"></i> Accesible</span>
+            <span><i class="vip"></i> VIP</span>
+          </div>
+
+          <p class="mini-pantalla">PANTALLA</p>
+
+          <app-mapa-butacas
+            [filas]="filasButacas"
+            [butacasOcupadas]="butacasOcupadas()"
+            [compacto]="true"
+          ></app-mapa-butacas>
+
+          <a
+            class="boton-elegir-butacas"
+            [routerLink]="['/funcion', funcion.id, 'butacas']"
+            [queryParams]="modoEdicion ? { editar: true } : {}"
+          >
+            Elegir butacas
+            <span>→</span>
+          </a>
+        }
+      </section>
+
+      <app-resenas-pelicula
+        [resenas]="resenas"
+        [puntajePromedio]="puntajePromedio"
+        [usuarioActual]="usuarioActual"
+        (resenaPublicada)="agregarResena($event)"
+      ></app-resenas-pelicula>
+    </div>
+  } @else {
+    <h1>Película no encontrada</h1>
+    <p>La película solicitada no existe o fue eliminada.</p>
+  }
+</main>

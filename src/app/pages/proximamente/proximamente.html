@@ -1,0 +1,31 @@
+<main class="gestion estrenos">
+  <header class="gestion-encabezado">
+    <div>
+      <p class="etiqueta-gestion">CINE SPECTADORES · LO QUE VIENE</p>
+      <h1>Próximamente</h1>
+      <p>Estrenos de las próximas seis semanas. Activá una alerta o aprovechá la preventa.</p>
+    </div>
+  </header>
+  <label class="buscador-estrenos"
+    >Buscar estreno
+    <input
+      type="search"
+      [ngModel]="busqueda()"
+      (ngModelChange)="busqueda.set($event)"
+      placeholder="Nombre de la película"
+  /></label>
+  <p class="estado-carga" role="status">
+    {{ cargando() ? 'Cargando próximos estrenos…' : mensaje() }}
+  </p>
+  @if (!cargando() && !mensaje()) {
+    <section class="grilla-estrenos">
+      @for (p of filtradas(); track p.id) {
+        <article class="panel tarjeta-estreno">
+          <app-pelicula-card [pelicula]="p" /><app-aviso-estreno [pelicula]="p" />
+        </article>
+      } @empty {
+        <p class="panel">Todavía no hay próximos estrenos con esos filtros.</p>
+      }
+    </section>
+  }
+</main>

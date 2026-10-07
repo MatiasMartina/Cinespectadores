@@ -1,0 +1,52 @@
+.estrellas {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.estrella {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: rgb(139 92 246 / 25%);
+  font-size: 1.8rem;
+  line-height: 1;
+  text-shadow: none;
+}
+
+button.estrella {
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    text-shadow 0.2s ease;
+}
+
+.estrella-activa {
+  color: #ec4899;
+  text-shadow:
+    0 0 6px rgb(236 72 153 / 80%),
+    0 0 14px rgb(139 92 246 / 65%);
+}
+
+.estrellas-editables:hover button.estrella {
+  color: #22d3ee;
+  text-shadow:
+    0 0 6px rgb(34 211 238 / 80%),
+    0 0 14px rgb(34 211 238 / 50%);
+}
+
+.estrellas-editables button.estrella:hover {
+  transform: scale(1.18);
+}
+
+.estrellas-editables button.estrella:hover ~ button.estrella {
+  color: rgb(139 92 246 / 25%);
+  text-shadow: none;
+}
+
+button.estrella:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+  border-radius: 0.2rem;
+}

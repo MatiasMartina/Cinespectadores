@@ -1,0 +1,333 @@
+:host {
+  display: block;
+}
+.gestion.perfil {
+  width: min(1640px, calc(100% - 40px));
+  padding: 18px 0 28px;
+}
+.perfil .gestion-encabezado {
+  position: relative;
+  display: block;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.perfil .gestion-encabezado h1 {
+  margin: 4px 0 0;
+  font-size: 1.9rem;
+}
+.perfil .etiqueta-gestion {
+  margin: 0;
+  font-size: 0.68rem;
+}
+.perfil .gestion-encabezado > button {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 0.77rem;
+}
+.perfil-resumen {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 18px;
+  border: 1px solid #8b5cf644;
+  border-radius: 14px;
+  background: var(--fondo-caja);
+}
+.identidad-perfil {
+  min-width: 0;
+  text-align: center;
+}
+.perfil .identidad-perfil h2 {
+  margin: 0 0 5px;
+  font-size: 1rem;
+}
+.identidad-perfil p {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.saldo-perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.saldo-perfil span {
+  font-size: 0.74rem;
+  color: var(--texto-secundario);
+}
+.saldo-perfil strong {
+  font-size: 1.5rem;
+  color: var(--celeste);
+}
+.perfil .estado-carga {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 5px 0;
+  padding: 2px 0;
+  overflow: auto;
+  text-align: center;
+  font-size: 0.77rem;
+  line-height: 1.4;
+}
+.perfil-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.perfil .perfil-layout > .panel {
+  display: flex;
+  flex-direction: column;
+  height: clamp(430px, calc(100dvh - 320px), 700px);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.perfil .panel > h2 {
+  flex: 0 0 auto;
+  padding: 16px;
+  margin: 0;
+  border-bottom: 1px solid #8b5cf630;
+  font-size: 1.05rem;
+}
+.contenido-perfil {
+  flex: 1;
+  min-height: 0;
+  padding: 14px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #715090 transparent;
+  scrollbar-gutter: stable;
+}
+.perfil .ayuda-gestion {
+  margin: 0 0 12px;
+  font-size: 0.77rem;
+  line-height: 1.45;
+  text-align: center;
+}
+.lista-beneficios,
+.lista-canjes,
+.lista-movimientos {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+.tarjeta-recompensa {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 15px;
+  border: 1px solid #8b5cf638;
+  border-radius: 12px;
+  background: #8b5cf609;
+  text-align: center;
+}
+.tarjeta-recompensa > strong {
+  font-size: 0.95rem;
+}
+.tarjeta-recompensa p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+}
+.acciones-canje {
+  display: grid;
+  grid-template-columns: auto 62px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.acciones-canje label {
+  font-size: 0.75rem;
+  color: var(--texto-secundario);
+}
+.perfil .acciones-canje input {
+  height: 38px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px;
+  text-align: center;
+}
+.perfil .acciones-canje button,
+.perfil .boton-gestion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 9px 12px;
+  font-size: 0.78rem;
+  border-radius: 9px;
+  line-height: 1.3;
+}
+.perfil .estado-recompensa {
+  min-height: 20px;
+  font-size: 0.72rem;
+  color: #86efac;
+}
+.perfil .estado-recompensa.error,
+.perfil .estado-carga.error {
+  color: #fda4af;
+}
+.qr-canje {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.perfil .qr-canje h3 {
+  margin: 0;
+  line-height: 1.4;
+}
+.perfil .qr-canje .estado-gestion {
+  margin: 0;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+}
+.imagen-qr-canje {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 210px;
+  height: 210px;
+  max-width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  color: #21152e;
+}
+.imagen-qr-canje img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.perfil code {
+  max-width: 100%;
+  font-size: 0.67rem;
+  color: #b8abd1;
+  overflow-wrap: anywhere;
+}
+.vacio-canjes {
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+}
+.perfil .boton-canje-guardado {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: 11px;
+  text-align: center;
+  border: 1px solid #8b5cf63d;
+  background: #8b5cf60c;
+}
+.boton-canje-guardado strong {
+  font-size: 0.8rem;
+}
+.boton-canje-guardado span {
+  color: var(--texto-secundario);
+  font-size: 0.72rem;
+}
+.perfil .boton-canje-guardado.seleccionado {
+  border-color: #22d3ee75;
+  background: #22d3ee0c;
+}
+.pestanas-perfil {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px 14px 0;
+}
+.perfil .pestanas-perfil button {
+  min-height: 36px;
+  padding: 8px;
+  font-size: 0.77rem;
+}
+.perfil .pestanas-perfil .activo {
+  color: var(--celeste);
+  border-color: #22d3ee70;
+  background: #22d3ee14;
+}
+.lista-movimientos li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  padding: 12px 0;
+  border-bottom: 1px solid #8b5cf626;
+}
+.lista-movimientos strong {
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+.lista-movimientos small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.69rem;
+}
+.lista-movimientos code {
+  grid-column: 1 / -1;
+}
+.importe-movimiento {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #86efac;
+  white-space: nowrap;
+}
+.importe-movimiento.negativo {
+  color: #fda4af;
+}
+@media (max-width: 1000px) {
+  .gestion.perfil {
+    width: calc(100% - 28px);
+  }
+  .perfil-resumen {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .perfil-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .panel-historial {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 650px) {
+  .perfil .gestion-encabezado > button {
+    position: static;
+    margin-top: 10px;
+  }
+  .perfil-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .perfil .perfil-layout > .panel {
+    height: auto;
+    max-height: 580px;
+  }
+  .contenido-perfil {
+    flex: 0 1 auto;
+  }
+  .panel-historial {
+    grid-column: 1;
+  }
+  .identidad-perfil {
+    grid-column: 1 / -1;
+  }
+  .perfil-resumen > a {
+    grid-column: 1 / -1;
+  }
+  .saldo-perfil strong {
+    font-size: 1.3rem;
+  }
+}

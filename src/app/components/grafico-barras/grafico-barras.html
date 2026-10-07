@@ -1,0 +1,15 @@
+<ol class="grafico-barras" aria-label="Comparación por cantidad">
+  @for (dato of datos(); track $index) {
+    <li>
+      <div class="barra-etiqueta">
+        <span>{{ dato.nombre }}</span
+        ><strong>{{ dato.valor }} {{ unidad() }}</strong>
+      </div>
+      <div class="barra-fondo" aria-hidden="true">
+        <span [style.width.%]="(dato.valor / maximo()) * 100"></span>
+      </div>
+    </li>
+  } @empty {
+    <li class="mensaje-vacio">Sin datos en este período.</li>
+  }
+</ol>

@@ -1,0 +1,235 @@
+:host {
+  display: block;
+  grid-column: 1/-1;
+  min-width: 0;
+}
+.resenas {
+  border: 1px solid rgb(139 92 246 / 35%);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgb(139 92 246 / 10%), transparent 58%), #09070e;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 25%);
+}
+.resenas-encabezado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+.resenas-encabezado > div {
+  width: 100%;
+}
+.resenas-encabezado .promedio-resenas {
+  justify-content: center;
+}
+h2 {
+  margin: 0 0 12px;
+  color: var(--texto-principal);
+  font-size: 1.1rem;
+}
+.etiqueta {
+  margin: 0 0 10px;
+  color: var(--celeste);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+/* Reseñas */
+
+.resenas {
+  grid-column: 1 / -1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 22px;
+}
+
+.formulario-resena {
+  display: grid;
+  gap: 11px;
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid rgb(139 92 246 / 25%);
+  border-radius: 14px;
+  background-color: rgb(139 92 246 / 7%);
+}
+
+.publicando-como {
+  margin: 0;
+  color: #c4b5fd;
+  font-size: 0.82rem;
+}
+
+.formulario-resena select,
+.formulario-resena textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid rgb(139 92 246 / 45%);
+  border-radius: 9px;
+  outline: 0;
+  background-color: rgb(9 7 14 / 80%);
+  color: var(--texto-principal);
+  font: inherit;
+}
+
+.formulario-resena textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.formulario-resena select:focus,
+.formulario-resena textarea:focus {
+  border-color: var(--celeste);
+  box-shadow: 0 0 10px rgb(34 211 238 / 20%);
+}
+
+.formulario-resena button {
+  justify-self: start;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 999px;
+  background-color: #f5f3ff;
+  color: #140d22;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.formulario-resena button:hover {
+  background-color: var(--celeste);
+}
+
+.lista-resenas {
+  display: grid;
+  gap: 12px;
+}
+
+.resena {
+  padding: 15px;
+  border: 1px solid rgb(139 92 246 / 22%);
+  border-radius: 13px;
+  background-color: rgb(255 255 255 / 3%);
+}
+
+.encabezado-resena {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.encabezado-resena strong {
+  color: var(--texto-principal);
+}
+
+.encabezado-resena span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background-color: rgb(34 211 238 / 10%);
+  color: var(--celeste);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.resena p,
+.mensaje-vacio {
+  color: var(--texto-secundario);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.resena small {
+  color: #a78bfa;
+  font-size: 0.75rem;
+}
+
+.aviso-inicio {
+  margin: 20px 0;
+  padding: 13px;
+  border: 1px solid rgb(236 72 153 / 40%);
+  border-radius: 12px;
+  background-color: rgb(236 72 153 / 7%);
+  color: var(--texto-secundario);
+  font-size: 0.86rem;
+}
+
+.aviso-inicio a {
+  color: var(--celeste);
+  font-weight: 800;
+}
+
+.promedio-resenas {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.promedio-resenas strong {
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.promedio-resenas span {
+  color: #9b9baa;
+  font-size: 0.85rem;
+}
+
+.selector-puntaje {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #30303d;
+  border-radius: 0.8rem;
+  background: #181820;
+}
+
+.selector-puntaje > span {
+  color: #b5b5c1;
+  font-size: 0.9rem;
+}
+
+.selector-puntaje > strong {
+  color: #22d3ee;
+  margin-left: auto;
+}
+
+.puntaje-resena {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.puntaje-resena > span {
+  color: #ec4899;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .resenas-encabezado {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .selector-puntaje {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .selector-puntaje > strong {
+    margin-left: 0;
+  }
+
+  .encabezado-resena {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}
+@media (max-width: 700px) {
+  :host {
+    grid-column: auto;
+  }
+}

@@ -1,0 +1,73 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.marco-video {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto 14px;
+  background: #080b14;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* El contenedor queda visible antes de iniciar la cámara para poder medirlo. */
+.video-qr {
+  display: block;
+  width: 100%;
+  min-height: 240px;
+}
+
+.visor-espera {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--texto-secundario, #c4b5fd);
+  text-align: center;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.estado-camara,
+.qr-detectado {
+  margin: 0 0 16px;
+  color: var(--celeste, #22d3ee);
+  font-size: 0.85rem;
+}
+
+.indicador-vivo {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+}
+
+.mensaje-lector {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+}
+
+/* Variante compacta: el lector mantiene la cámara y su proporción natural. */
+:host(.lector-compacto) .lector-qr {
+  margin-bottom: 0;
+}
+:host(.lector-compacto) .marco-video {
+  max-width: 300px;
+  margin-bottom: 8px;
+}
+:host(.lector-compacto) .video-qr {
+  min-height: 180px;
+}
+:host(.lector-compacto) :is(.estado-camara, .qr-detectado, .mensaje-lector) {
+  margin: 6px 0 0;
+  font-size: 0.75rem;
+  text-align: center;
+}

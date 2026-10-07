@@ -1,0 +1,186 @@
+<main>
+  <section class="registro-layout">
+    <aside class="marca-panel">
+      <div class="marca-contenido">
+        <p class="marca-etiqueta">TU PRÓXIMA FUNCIÓN</p>
+        <h2>Viví el cine como nunca antes.</h2>
+        <p>Creá tu cuenta, elegí tus butacas y disfrutá de cada estreno.</p>
+      </div>
+
+      <p class="marca-pie">Cine spectadores · Tu entrada al mejor plan</p>
+    </aside>
+
+    <section class="form-panel">
+      @if (registroExitoso) {
+        <div class="mensaje-exito">
+          <h1>¡Registro exitoso!</h1>
+          <p>{{ mensajeExito }}</p>
+          @if (requiereConfirmacion) {
+            <a routerLink="/inicio-sesion" [queryParams]="{ returnUrl: returnUrl }">
+              Ir a iniciar sesión
+            </a>
+          } @else {
+            <a routerLink="/">Ir a la cartelera</a>
+          }
+        </div>
+      } @else {
+        <header class="encabezado-formulario">
+          <p class="form-etiqueta">CINE SPECTADORES</p>
+          <h1>Crear una cuenta</h1>
+          <p>Completá tus datos para registrarte.</p>
+        </header>
+
+        <form [formGroup]="formRegistro" (ngSubmit)="registrar()" novalidate>
+          <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" autocomplete="given-name" formControlName="nombre" />
+
+            <p class="mensaje-error reserva-error">
+              @if (nombre.invalid && (nombre.touched || formularioEnviado)) {
+                {{ mensajeNombre(nombre, 'nombre') }}
+              }
+            </p>
+          </div>
+
+          <div class="campo">
+            <label for="apellido">Apellido</label>
+            <input
+              id="apellido"
+              type="text"
+              autocomplete="family-name"
+              formControlName="apellido"
+            />
+
+            <p class="mensaje-error reserva-error">
+              @if (apellido.invalid && (apellido.touched || formularioEnviado)) {
+                {{ mensajeNombre(apellido, 'apellido') }}
+              }
+            </p>
+          </div>
+
+          <div class="campo campo-completo">
+            <label for="email">E-mail</label>
+            <input id="email" type="email" formControlName="email" />
+
+            <p class="mensaje-error reserva-error">
+              @if (email.invalid && (email.touched || formularioEnviado)) {
+                Ingresá un email válido, por ejemplo nombre@dominio.com.
+              }
+            </p>
+          </div>
+
+          <div class="campo campo-completo">
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <app-fecha-nacimiento
+              identificador="fechaNacimiento"
+              formControlName="fechaNacimiento"
+              [invalida]="fechaNacimiento.invalid && (fechaNacimiento.touched || formularioEnviado)"
+            ></app-fecha-nacimiento>
+
+            <div class="mensaje-fecha reserva-error">
+              @if (fechaNacimiento.invalid && (fechaNacimiento.touched || formularioEnviado)) {
+                @if (fechaNacimiento.hasError('anioFueraDeRango')) {
+                  <p class="mensaje-error">El año debe estar entre 1900 y {{ anioActual }}.</p>
+                } @else if (fechaNacimiento.hasError('fechaFutura')) {
+                  <p class="mensaje-error">La fecha de nacimiento no puede ser futura.</p>
+                } @else {
+                  <p class="mensaje-error">Ingresá una fecha válida con formato dd/mm/aaaa.</p>
+                }
+              }
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="contrasena">Contraseña</label>
+
+            <div class="campo-contrasena">
+              <input
+                id="contrasena"
+                [type]="mostrarContrasena ? 'text' : 'password'"
+                formControlName="contrasena"
+              />
+
+              <button
+                type="button"
+                class="boton-visor"
+                aria-label="Mantener presionado para ver la contraseña"
+                (mousedown)="mostrarContrasenaPrincipal()"
+                (mouseup)="ocultarContrasenaPrincipal()"
+                (mouseleave)="ocultarContrasenaPrincipal()"
+                (touchstart)="mostrarContrasenaPrincipal()"
+                (touchend)="ocultarContrasenaPrincipal()"
+                (touchcancel)="ocultarContrasenaPrincipal()"
+              >
+                👁
+              </button>
+            </div>
+
+            <p class="mensaje-error reserva-error">
+              @if (contrasena.invalid && (contrasena.touched || formularioEnviado)) {
+                La contraseña debe tener al menos 6 caracteres.
+              }
+            </p>
+          </div>
+
+          <div class="campo">
+            <label for="confirmarContrasena">Confirmar contraseña</label>
+
+            <div class="campo-contrasena">
+              <input
+                id="confirmarContrasena"
+                [type]="mostrarConfirmacion ? 'text' : 'password'"
+                formControlName="confirmarContrasena"
+              />
+
+              <button
+                type="button"
+                class="boton-visor"
+                aria-label="Mantener presionado para ver la confirmación"
+                (mousedown)="mostrarConfirmacionContrasena()"
+                (mouseup)="ocultarConfirmacionContrasena()"
+                (mouseleave)="ocultarConfirmacionContrasena()"
+                (touchstart)="mostrarConfirmacionContrasena()"
+                (touchend)="ocultarConfirmacionContrasena()"
+                (touchcancel)="ocultarConfirmacionContrasena()"
+              >
+                👁
+              </button>
+            </div>
+
+            <p class="mensaje-error reserva-error">
+              @if (
+                confirmarContrasena.invalid && (confirmarContrasena.touched || formularioEnviado)
+              ) {
+                Confirmá tu contraseña.
+              }
+            </p>
+          </div>
+
+          <div class="campo-completo zona-errores">
+            @if (
+              formRegistro.hasError('contrasenasNoCoinciden') &&
+              (confirmarContrasena.touched || formularioEnviado)
+            ) {
+              <p class="mensaje-error">Las contraseñas no coinciden.</p>
+            }
+
+            @if (mensajeError) {
+              <p class="mensaje-error">{{ mensajeError }}</p>
+            }
+          </div>
+
+          <button type="submit" class="boton-registro campo-completo" [disabled]="procesando()">
+            {{ procesando() ? 'Creando cuenta…' : 'Crear cuenta' }}
+          </button>
+        </form>
+
+        <p class="iniciar-sesion">
+          ¿Ya tenés una cuenta?
+          <a routerLink="/inicio-sesion" [queryParams]="{ returnUrl: returnUrl }">
+            Iniciar sesión
+          </a>
+        </p>
+      }
+    </section>
+  </section>
+</main>

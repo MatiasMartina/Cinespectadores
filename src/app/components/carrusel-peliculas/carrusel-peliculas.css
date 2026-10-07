@@ -1,0 +1,214 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+.carrusel {
+  margin-top: 12px;
+}
+.diapositiva {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 290px);
+  align-items: center;
+  gap: 36px;
+  min-height: 380px;
+  padding: 28px clamp(24px, 5vw, 64px);
+  overflow: hidden;
+  border: 1px solid rgb(139 92 246 / 30%);
+  border-radius: 24px;
+  background: #171126;
+  animation: aparecer-top 350ms ease-out;
+}
+.fondo-banner {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: blur(5px);
+  transform: scale(1.03);
+}
+.diapositiva::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    rgb(11 7 20 / 95%) 10%,
+    rgb(11 7 20 / 75%) 55%,
+    rgb(11 7 20 / 35%)
+  );
+}
+.contenido-banner {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-align: center;
+}
+.puesto-top {
+  padding: 7px 16px;
+  border: 1px solid rgb(34 211 238 / 45%);
+  border-radius: 999px;
+  background: rgb(34 211 238 / 12%);
+  color: var(--celeste);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 0;
+  color: var(--texto-principal);
+  font-size: clamp(1.7rem, 3.2vw, 2.8rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+.datos-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 0.9rem;
+}
+.sinopsis-banner {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: 520px;
+  margin: 0;
+  color: var(--texto-secundario);
+  line-height: 1.5;
+}
+.boton-entradas {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-top: 4px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(110deg, var(--violeta), var(--rosa));
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+.boton-entradas:hover {
+  filter: brightness(1.15);
+}
+svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.poster-banner {
+  justify-self: center;
+  width: 100%;
+  max-width: 214px;
+  height: 320px;
+  object-fit: contain;
+  border-radius: 16px;
+  filter: drop-shadow(0 12px 24px rgb(0 0 0 / 50%));
+}
+.controles-carrusel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.controles-carrusel button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--texto-secundario);
+  cursor: pointer;
+}
+.controles-carrusel button:hover {
+  background: rgb(139 92 246 / 16%);
+  color: white;
+}
+.indicadores {
+  display: flex;
+  gap: 2px;
+}
+.indicador span {
+  width: 30px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgb(196 181 253 / 35%);
+}
+.indicador.activo span {
+  background: var(--celeste);
+}
+.controles-carrusel .boton-pausa {
+  gap: 6px;
+  padding-inline: 10px;
+  font-size: 0.75rem;
+}
+@keyframes aparecer-top {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .diapositiva {
+    animation: none;
+  }
+}
+@media (max-width: 650px) {
+  .diapositiva {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 340px;
+    padding: 24px 20px;
+  }
+  .poster-banner {
+    display: none;
+  }
+  .fondo-banner {
+    filter: none;
+  }
+  .diapositiva::after {
+    background: rgb(11 7 20 / 82%);
+  }
+  .contenido-banner {
+    gap: 10px;
+  }
+  .sinopsis-banner {
+    font-size: 0.9rem;
+  }
+  .controles-carrusel {
+    gap: 0;
+  }
+  .controles-carrusel .boton-pausa {
+    padding-inline: 6px;
+  }
+  .texto-pausa {
+    display: none;
+  }
+}

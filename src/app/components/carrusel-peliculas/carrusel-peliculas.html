@@ -1,0 +1,102 @@
+@if (peliculaActiva(); as actual) {
+  <section
+    class="carrusel"
+    role="region"
+    aria-roledescription="carrusel"
+    aria-label="Películas más vendidas"
+    (mouseenter)="cambiarHover(true)"
+    (mouseleave)="cambiarHover(false)"
+    (focusin)="entrarFoco()"
+    (focusout)="salirFoco($event)"
+  >
+    @for (pelicula of [actual]; track pelicula.id) {
+      <article
+        class="diapositiva"
+        aria-roledescription="diapositiva"
+        [attr.aria-label]="'Top ' + (indiceActual() + 1) + ' de ' + peliculas().length"
+        aria-live="off"
+      >
+        <img
+          class="fondo-banner"
+          [src]="pelicula.imagenUrl"
+          alt=""
+          aria-hidden="true"
+          referrerpolicy="no-referrer"
+        />
+        <div class="contenido-banner">
+          <span class="puesto-top">Top {{ indiceActual() + 1 }}</span>
+          <h3 [title]="pelicula.nombre">{{ pelicula.nombre }}</h3>
+          <p class="datos-banner">
+            {{ pelicula.duracionMinutos }} min <span aria-hidden="true">·</span>
+            {{ pelicula.edadMinima === 0 ? 'ATP' : '+' + pelicula.edadMinima }}
+          </p>
+          <p class="sinopsis-banner">{{ pelicula.sinopsis }}</p>
+          <a class="boton-entradas" [routerLink]="['/pelicula', pelicula.id]">
+            Ver funciones
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
+            </svg>
+          </a>
+        </div>
+        <img
+          class="poster-banner"
+          [src]="pelicula.imagenUrl"
+          [alt]="'Póster de ' + pelicula.nombre"
+          referrerpolicy="no-referrer"
+        />
+      </article>
+    }
+
+    @if (peliculas().length > 1) {
+      <div class="controles-carrusel">
+        <button
+          class="flecha-anterior"
+          type="button"
+          aria-label="Película anterior"
+          (click)="anterior()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
+        </button>
+        <div class="indicadores" role="group" aria-label="Elegir película del Top">
+          @for (destacada of peliculas(); track destacada.id; let indice = $index) {
+            <button
+              class="indicador"
+              type="button"
+              [class.activo]="indice === indiceActual()"
+              [attr.aria-label]="'Ver Top ' + (indice + 1) + ': ' + destacada.nombre"
+              [attr.aria-current]="indice === indiceActual() ? 'true' : null"
+              (click)="seleccionar(indice)"
+            >
+              <span></span>
+            </button>
+          }
+        </div>
+        <button
+          class="flecha-siguiente"
+          type="button"
+          aria-label="Película siguiente"
+          (click)="siguiente()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
+        </button>
+        <button
+          class="boton-pausa"
+          type="button"
+          [attr.aria-label]="
+            pausado() ? 'Reanudar rotación automática' : 'Pausar rotación automática'
+          "
+          (click)="alternarPausa()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            @if (pausado()) {
+              <path d="m8 5 11 7-11 7Z" />
+            } @else {
+              <path d="M8 5v14M16 5v14" />
+            }
+          </svg>
+          <span class="texto-pausa">{{ pausado() ? 'Reanudar' : 'Pausar' }}</span>
+        </button>
+      </div>
+    }
+  </section>
+}

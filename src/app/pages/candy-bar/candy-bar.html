@@ -1,0 +1,189 @@
+<main>
+  <header class="encabezado-candy">
+    @if (modoEdicion) {
+      <a class="boton-volver" routerLink="/confirmacion" (click)="descartarCambios()"> Volver </a>
+    } @else if (funcionId !== undefined) {
+      <a class="boton-volver" [routerLink]="['/funcion', funcionId, 'butacas']"> Volver </a>
+    } @else {
+      <a class="boton-volver" routerLink="/">Volver</a>
+    }
+
+    <div class="encabezado-candy-texto">
+      <h1>Candy Bar</h1>
+      <p>Sumá algo rico para disfrutar durante la función.</p>
+    </div>
+  </header>
+
+  @if (cargando()) {
+    <p role="status">Cargando Candy Bar…</p>
+  } @else if (mensaje()) {
+    <p role="alert">{{ mensaje() }}</p>
+  } @else {
+    <div class="filtros-candy" role="group" aria-label="Filtrar productos">
+      <button
+        type="button"
+        [class.activo]="categoriaSeleccionada === null"
+        [attr.aria-pressed]="categoriaSeleccionada === null"
+        (click)="seleccionarCategoria(null)"
+      >
+        Todos
+      </button>
+
+      @for (categoria of categorias; track categoria.id) {
+        <button
+          type="button"
+          [class.activo]="categoriaSeleccionada === categoria.id"
+          [attr.aria-pressed]="categoriaSeleccionada === categoria.id"
+          (click)="seleccionarCategoria(categoria.id)"
+        >
+          {{ categoria.nombre }}
+        </button>
+      }
+    </div>
+
+    <div class="candy-layout">
+      <section class="productos-candy" aria-label="Productos del Candy Bar">
+        @for (producto of productosFiltrados; track producto.id) {
+          <article class="producto-candy">
+            <div class="producto-imagen">
+              <img [src]="producto.imagenUrl" [alt]="producto.nombre" loading="lazy" />
+            </div>
+
+            <div class="producto-info">
+              <h2>{{ producto.nombre }}</h2>
+
+              <div class="producto-novedad">
+                @if (getCantidadNueva(producto) > 0) {
+                  <span class="etiqueta-nuevo"> +{{ getCantidadNueva(producto) }} nuevo </span>
+                }
+              </div>
+
+              <div class="producto-compra">
+                <p class="precio">${{ producto.precio.toLocaleString('es-AR') }}</p>
+
+                <div
+                  class="controles-cantidad"
+                  role="group"
+                  [attr.aria-label]="'Cantidad de ' + producto.nombre"
+                >
+                  <button
+                    type="button"
+                    (click)="quitarProducto(producto)"
+                    [disabled]="getCantidadProducto(producto) === 0"
+                    [attr.aria-label]="'Quitar una unidad de ' + producto.nombre"
+                  >
+                    −
+                  </button>
+
+                  <span aria-live="polite" aria-atomic="true">
+                    {{ getCantidadProducto(producto) }}
+                  </span>
+
+                  <button
+                    type="button"
+                    (click)="agregarProducto(producto)"
+                    [attr.aria-label]="'Agregar una unidad de ' + producto.nombre"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        }
+      </section>
+
+      <aside class="resumen-candy" aria-labelledby="titulo-pedido">
+        <header class="pedido-encabezado">
+          <div>
+            <p class="pedido-etiqueta">PARA TU FUNCIÓN</p>
+            <h2 id="titulo-pedido">Tu pedido</h2>
+          </div>
+
+          <span
+            class="pedido-cantidad"
+            [attr.aria-label]="getCantidadTotal() + ' unidades agregadas'"
+          >
+            {{ getCantidadTotal() }}
+          </span>
+        </header>
+
+        <div class="pedido-lista">
+          @if (getCantidadTotal() > 0) {
+            <ul class="pedido-productos">
+              @for (producto of productos; track producto.id) {
+                @if (getCantidadProducto(producto) > 0) {
+                  <li
+                    class="pedido-producto"
+                    [class.pedido-producto-nuevo]="getCantidadNueva(producto) > 0"
+                  >
+                    <img [src]="producto.imagenUrl" alt="" loading="lazy" />
+
+                    <div class="pedido-producto-info">
+                      <h3>{{ producto.nombre }}</h3>
+
+                      @if (getCantidadNueva(producto) > 0) {
+                        <span class="etiqueta-nuevo">
+                          +{{ getCantidadNueva(producto) }} nuevo
+                        </span>
+                      }
+
+                      <p>
+                        {{ getCantidadProducto(producto) }} × ${{
+                          producto.precio.toLocaleString('es-AR')
+                        }}
+                      </p>
+                    </div>
+
+                    <strong class="pedido-subtotal">
+                      ${{
+                        (producto.precio * getCantidadProducto(producto)).toLocaleString('es-AR')
+                      }}
+                    </strong>
+                  </li>
+                }
+              }
+            </ul>
+          } @else {
+            <div class="pedido-vacio">
+              <span class="pedido-vacio-icono" aria-hidden="true">+</span>
+              <h3>¿Algo para acompañar?</h3>
+              <p>Agregá tus favoritos con el botón + y aparecerán acá.</p>
+            </div>
+          }
+        </div>
+
+        <footer class="pedido-footer">
+          <div class="pedido-total" aria-live="polite" aria-atomic="true">
+            <span>Total Candy Bar</span>
+            <strong>${{ getTotal().toLocaleString('es-AR') }}</strong>
+          </div>
+
+          @if (puedeContinuar) {
+            <a class="boton-continuar" routerLink="/confirmacion" (click)="aceptarCambios()">
+              Continuar a la confirmación
+              <span aria-hidden="true">↗</span>
+            </a>
+          } @else {
+            <button type="button" class="boton-continuar" disabled>
+              Elegí una función para continuar
+            </button>
+          }
+          <div class="pedido-acciones">
+            <button
+              type="button"
+              class="boton-vaciar"
+              (click)="vaciarCarrito()"
+              [disabled]="getCantidadTotal() === 0"
+            >
+              Vaciar carrito
+            </button>
+            <button type="button" class="boton-cancelar" (click)="cancelarCompra()">
+              Cancelar compra
+            </button>
+          </div>
+        </footer>
+      </aside>
+    </div>
+  }
+</main>

@@ -1,0 +1,24 @@
+<div
+  class="estrellas"
+  [class.estrellas-editables]="editable()"
+  [attr.aria-label]="'Calificación: ' + puntaje() + ' de 5'"
+>
+  @for (estrella of estrellas; track estrella) {
+    @if (editable()) {
+      <button
+        type="button"
+        class="estrella"
+        [class.estrella-activa]="estaActiva(estrella)"
+        [attr.aria-label]="estrella + ' estrellas'"
+        [attr.aria-pressed]="puntaje() === estrella"
+        (click)="seleccionarPuntaje(estrella)"
+      >
+        ★
+      </button>
+    } @else {
+      <span class="estrella" [class.estrella-activa]="estaActiva(estrella)" aria-hidden="true">
+        ★
+      </span>
+    }
+  }
+</div>

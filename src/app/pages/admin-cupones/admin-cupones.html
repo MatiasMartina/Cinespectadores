@@ -1,0 +1,89 @@
+<h2>Cupones y precios</h2>
+<p
+  class="estado-carga"
+  aria-live="polite"
+  [class.error]="error()"
+  [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+>
+  {{
+    cargando() ? mensaje() || 'Cargando datos…' : procesando() ? 'Guardando cambios…' : mensaje()
+  }}
+</p>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <section class="panel panel-precios panel-con-acciones">
+    <div class="contenido-panel">
+      <h2>Beneficio de primera compra y adicional VIP</h2>
+      <p class="ayuda-gestion">
+        Los descuentos no se acumulan: se utiliza el beneficio de mayor valor. Los cupones por edad
+        se pueden usar en compras posteriores mientras estén activos.
+      </p>
+      <form
+        id="form-configuracion-precios"
+        class="form-gestion"
+        (ngSubmit)="guardarConfiguracion()"
+      >
+        <div class="campo-gestion">
+          <label for="porcentajePrimera">Primera compra (%)</label
+          ><input
+            id="porcentajePrimera"
+            name="porcentajePrimera"
+            type="number"
+            min="0"
+            max="100"
+            [(ngModel)]="porcentajePrimeraCompra"
+            required
+          />
+        </div>
+        <div class="campo-gestion">
+          <label for="extraVip">Adicional por butaca VIP</label
+          ><input
+            id="extraVip"
+            name="extraVip"
+            type="number"
+            min="0"
+            [(ngModel)]="extraVip"
+            required
+          />
+        </div>
+      </form>
+    </div>
+    <div class="acciones-gestion pie-panel">
+      <button class="primario" type="submit" form="form-configuracion-precios">
+        Guardar configuración
+      </button>
+    </div>
+  </section>
+  <div class="gestion-layout">
+    <app-formulario-catalogo
+      [titulo]="editandoId ? 'Editar cupón' : 'Nuevo cupón'"
+      [campos]="campos"
+      [valores]="valores"
+      (guardado)="guardar($event)"
+      (cancelado)="cancelar()"
+    ></app-formulario-catalogo>
+    <section class="panel lista-gestion" aria-label="Cupones cargados">
+      <div class="scroll-panel">
+        @for (cupon of cupones; track cupon.id) {
+          <article class="registro-gestion sin-imagen">
+            <div>
+              <h3>{{ cupon.codigo }} · {{ cupon.porcentajeDescuento }}%</h3>
+              <p [title]="cupon.descripcion">{{ cupon.descripcion }}</p>
+              <p>
+                {{
+                  cupon.edadMinima !== undefined
+                    ? 'Edad mínima: ' + cupon.edadMinima
+                    : 'Sin restricción de edad'
+                }}
+                · <span class="estado-gestion">{{ cupon.activo ? 'Activo' : 'Inactivo' }}</span>
+              </p>
+            </div>
+            <div class="acciones-gestion">
+              <button (click)="editar(cupon)">Editar</button
+              ><button class="peligro" (click)="eliminar(cupon)">Eliminar</button>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  </div>
+</fieldset>

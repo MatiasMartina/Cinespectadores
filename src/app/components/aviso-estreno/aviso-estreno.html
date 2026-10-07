@@ -1,0 +1,43 @@
+<div class="aviso-estreno">
+  @if (estado() === 'preventa') {
+    <span class="etiqueta-beneficio">PREVENTA ABIERTA</span>
+    <p>
+      Entrada desde ${{ pelicula().precioPreventa?.toLocaleString('es-AR') }} hasta el estreno. El
+      adicional VIP se cobra aparte.
+    </p>
+  } @else if (estado() === 'proximamente') {
+    <span class="etiqueta-beneficio">PRÓXIMAMENTE · {{ pelicula().fechaEstreno }}</span>
+    <p>
+      {{
+        pelicula().preventaHabilitada
+          ? 'La preventa comienza el ' + inicioPreventa + '.'
+          : 'Todavía no hay venta abierta.'
+      }}
+    </p>
+  }
+  @if (usuario()) {
+    <button
+      type="button"
+      class="boton-gestion"
+      [disabled]="procesando()"
+      [attr.aria-pressed]="activa()"
+      (click)="cambiar()"
+    >
+      {{
+        procesando()
+          ? 'Guardando…'
+          : activa()
+            ? 'Desactivar alerta'
+            : 'Avisame cuando haya entradas'
+      }}
+    </button>
+  } @else {
+    <a
+      class="boton-gestion"
+      routerLink="/inicio-sesion"
+      [queryParams]="{ returnUrl: '/pelicula/' + pelicula().id }"
+      >Iniciar sesión para activar una alerta</a
+    >
+  }
+  <p class="estado-carga" role="status">{{ mensaje() }}</p>
+</div>

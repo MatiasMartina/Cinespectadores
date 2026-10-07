@@ -1,0 +1,106 @@
+﻿<h2>Películas</h2>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <nav class="subnav-gestion" aria-label="Gestión de películas">
+    <button
+      type="button"
+      [class.activo]="seccion() === 'lista'"
+      [attr.aria-pressed]="seccion() === 'lista'"
+      (click)="seccion.set('lista')"
+    >
+      Películas cargadas
+    </button>
+    <button
+      type="button"
+      [class.activo]="seccion() === 'formulario'"
+      [attr.aria-pressed]="seccion() === 'formulario'"
+      (click)="nueva()"
+    >
+      Agregar película
+    </button>
+  </nav>
+  <p
+    class="estado-carga"
+    aria-live="polite"
+    [class.error]="error()"
+    [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+  >
+    {{ cargando() ? 'Cargando películas…' : procesando() ? 'Guardando cambios…' : mensaje() }}
+  </p>
+  @if (seccion() === 'lista') {
+    <section class="panel panel-listado" aria-label="Películas cargadas">
+      <div class="filtros-gestion">
+        <label
+          >Buscar película<input
+            type="search"
+            placeholder="Nombre o género"
+            [ngModel]="busqueda()"
+            (ngModelChange)="busqueda.set($event)"
+        /></label>
+        <label
+          >Publicación<select [ngModel]="estado()" (ngModelChange)="estado.set($event)">
+            <option value="">Todas</option>
+            <option value="cartelera">En cartelera</option>
+            <option value="preventa">Preventa</option>
+            <option value="proximamente">Próximamente</option>
+            <option value="oculta">Ocultas</option>
+          </select></label
+        >
+      </div>
+      <p class="cantidad-resultados">{{ filtradas().length }} películas</p>
+      <div class="scroll-panel">
+        @for (pelicula of filtradas(); track pelicula.id) {
+          <article class="registro-gestion">
+            <img [src]="pelicula.imagenUrl" [alt]="pelicula.nombre" loading="lazy" />
+            <div class="datos-registro">
+              <h3>{{ pelicula.nombre }}</h3>
+              <p>
+                {{ pelicula.duracionMinutos }} min · {{ pelicula.generos.join(', ') }} ·
+                <span class="estado-gestion">{{ nombresEstado[estadoVenta(pelicula)] }}</span>
+              </p>
+            </div>
+            <div class="acciones-gestion">
+              <button (click)="editar(pelicula)">Editar</button>
+              <button (click)="cambiarPublicacion(pelicula)">
+                {{ pelicula.activa === false ? 'Publicar' : 'Ocultar' }}
+              </button>
+              <button class="peligro" (click)="eliminar(pelicula)">Eliminar</button>
+            </div>
+          </article>
+        } @empty {
+          <p>No hay películas que coincidan con la búsqueda.</p>
+        }
+      </div>
+    </section>
+  } @else {
+    <div class="gestion-layout editor-pelicula">
+      <app-formulario-catalogo
+        [titulo]="editandoId ? 'Editar película' : 'Nueva película'"
+        [campos]="campos"
+        [valores]="valores"
+        (modificado)="borrador.set($event)"
+        (guardado)="guardar($event)"
+        (cancelado)="cancelar()"
+      />
+      <section class="panel panel-previa">
+        <h2>Vista previa</h2>
+        <div class="contenido-previa">
+          <app-pelicula-card [pelicula]="vistaPrevia()" [vistaPrevia]="true" />
+          <dl class="resumen-previa">
+            <dt>Publicación</dt>
+            <dd>{{ nombresEstado[estadoVenta(vistaPrevia())] }}</dd>
+            <dt>Estreno</dt>
+            <dd>{{ fechaParaMostrar(vistaPrevia().fechaEstreno || '') || 'Sin fecha' }}</dd>
+            <dt>Preventa</dt>
+            <dd>{{ vistaPrevia().preventaHabilitada ? 'Habilitada' : 'Deshabilitada' }}</dd>
+            @if (vistaPrevia().preventaHabilitada) {
+              <dt>Precio especial</dt>
+              <dd>${{ vistaPrevia().precioPreventa || 0 }}</dd>
+              <dt>Anticipación</dt>
+              <dd>{{ vistaPrevia().diasPreventa }} días</dd>
+            }
+          </dl>
+        </div>
+      </section>
+    </div>
+  }
+</fieldset>

@@ -1,0 +1,470 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+main {
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  padding: 36px 32px 56px;
+}
+
+.detalle-layout {
+  --alto-panel-funciones: 750px;
+  --alto-funcion: 112px; /* alto de cada función, ajustalo a gusto */
+
+  display: grid;
+  grid-template-columns: minmax(250px, 0.85fr) minmax(220px, 0.75fr) minmax(440px, 1.7fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.detalle-pelicula,
+.funciones,
+.mapa-disponibilidad {
+  border: 1px solid rgb(139 92 246 / 35%);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgb(139 92 246 / 10%), transparent 58%), #09070e;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 25%);
+}
+
+/* Los tres paneles superiores con la misma altura, siempre */
+
+.detalle-pelicula,
+.funciones,
+.mapa-disponibilidad {
+  display: flex;
+  height: var(--alto-panel-funciones);
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Panel de película */
+
+.poster-pelicula {
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 0; /* el póster absorbe el espacio sobrante */
+  min-height: 200px;
+  background-color: var(--fondo-principal);
+}
+
+.poster-pelicula::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 55%, rgb(9 7 14 / 72%));
+  content: '';
+}
+
+.poster-pelicula img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.clasificacion {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  right: 14px;
+  padding: 6px 9px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 999px;
+  background-color: rgb(9 7 14 / 75%);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.informacion {
+  flex: 0 0 auto;
+  max-height: 55%;
+  padding: 20px;
+  overflow-y: auto; /* por si la sinopsis es muy larga */
+}
+
+.etiqueta {
+  margin: 0 0 8px;
+  color: var(--celeste);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.informacion h1,
+.funciones h2,
+.mapa-disponibilidad h2 {
+  margin: 0;
+  color: var(--texto-principal);
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.sinopsis {
+  margin: 16px 0 20px;
+  color: var(--texto-secundario);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.datos-pelicula {
+  display: grid;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
+.datos-pelicula p {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+}
+
+.datos-pelicula strong {
+  color: var(--texto-principal);
+  text-align: right;
+}
+
+/* Panel de funciones */
+
+.funciones {
+  padding: 22px;
+}
+
+.lista-funciones {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  align-content: start; /* las filas NO se reparten el espacio sobrante */
+  grid-auto-rows: var(--alto-funcion); /* todas las filas miden lo mismo */
+  gap: 10px;
+  margin-top: 20px;
+  padding: 3px 5px 3px 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--violeta) transparent;
+}
+
+.lista-funciones::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-funciones::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background-color: var(--violeta);
+}
+
+.funcion {
+  display: grid;
+  height: var(--alto-funcion);
+  grid-template-columns: 1fr auto;
+  align-content: center; /* centra el contenido dentro del botón */
+  gap: 5px 10px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid rgb(139 92 246 / 28%);
+  border-radius: 13px;
+  background-color: rgb(139 92 246 / 7%);
+  color: var(--texto-secundario);
+  font: inherit;
+  font-size: 0.76rem;
+  text-align: left !important;
+  justify-content: stretch !important;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.funcion strong {
+  color: var(--texto-principal);
+  font-size: 1rem;
+}
+
+.funcion > span:nth-of-type(1) {
+  text-align: right;
+  justify-self: end;
+}
+
+.funcion small {
+  grid-column: 1 / -1;
+  color: var(--texto-secundario);
+  font-size: 0.72rem;
+}
+
+.funcion b {
+  grid-column: 1 / -1;
+  color: var(--celeste);
+  font-size: 0.9rem;
+}
+
+.funcion:hover,
+.funcion.funcion-activa {
+  border-color: rgb(34 211 238 / 65%);
+  background-color: rgb(34 211 238 / 9%);
+}
+
+.funcion:hover {
+  transform: translateY(-2px);
+}
+
+/* Mini mapa */
+
+.mapa-disponibilidad {
+  min-width: 0;
+  padding: 22px;
+}
+
+.mapa-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.horario-seleccionado {
+  display: grid;
+  min-width: 44px;
+  min-height: 36px;
+  place-items: center;
+  padding: 6px 10px;
+  border: 1px solid rgb(34 211 238 / 35%);
+  border-radius: 999px;
+  background-color: rgb(34 211 238 / 8%);
+  color: var(--celeste);
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.referencias-mini {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  margin: 16px 0 18px;
+  color: var(--texto-secundario);
+  font-size: 0.68rem;
+}
+
+.referencias-mini span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.referencias-mini i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+
+.referencias-mini i.disponible,
+.referencias-mini i.comun {
+  background-color: var(--celeste);
+  box-shadow: 0 0 7px rgb(34 211 238 / 70%);
+}
+
+.referencias-mini i.ocupada {
+  background-color: #fb7185;
+  box-shadow: 0 0 7px rgb(251 113 133 / 70%);
+}
+
+.referencias-mini i.accesible {
+  border: 2px solid #4ade80;
+  background-color: transparent;
+  box-shadow: 0 0 7px rgb(74 222 128 / 65%);
+}
+
+.referencias-mini i.vip {
+  border: 2px solid #fbbf24;
+  background-color: transparent;
+  box-shadow: 0 0 7px rgb(251 191 36 / 65%);
+}
+
+.mini-pantalla {
+  margin: 0 0 16px 32px;
+  padding: 9px;
+  border: 1px solid rgb(34 211 238 / 55%);
+  border-radius: 999px;
+  background-color: rgb(34 211 238 / 8%);
+  color: var(--celeste);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+.boton-elegir-butacas {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 41px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background-color: #f5f3ff;
+  color: #140d22;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.boton-elegir-butacas span {
+  font-size: 1.25rem;
+}
+
+.boton-elegir-butacas:hover {
+  background-color: var(--celeste);
+}
+
+/* Responsive */
+
+@media (max-width: 1200px) {
+  .detalle-layout {
+    grid-template-columns: minmax(250px, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .mapa-disponibilidad {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  main {
+    padding: 24px 16px 40px;
+  }
+
+  .detalle-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-pelicula,
+  .funciones,
+  .mapa-disponibilidad {
+    height: auto;
+  }
+
+  .mapa-disponibilidad {
+    grid-column: auto;
+  }
+
+  .poster-pelicula {
+    flex: none;
+    aspect-ratio: 2 / 2.6;
+    max-height: 420px;
+  }
+
+  .informacion {
+    max-height: none;
+  }
+
+  .referencias-mini {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .funcion,
+  .boton-elegir-butacas {
+    transition: none;
+  }
+
+  .funcion:hover {
+    transform: none;
+  }
+}
+
+.referencias-mini i.comun {
+  border: 2px solid #f5f3ff;
+  background-color: transparent;
+}
+
+.boton-volver {
+  padding: 9px 14px;
+
+  border: 1px solid rgb(139 92 246 / 35%);
+  border-radius: 999px;
+
+  background: rgb(139 92 246 / 8%);
+  color: var(--texto-principal);
+
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.boton-volver:hover {
+  background: rgb(139 92 246 / 18%);
+  border-color: var(--celeste);
+  transform: translateX(-2px);
+}
+
+.encabezado-detalle {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  margin-bottom: 24px;
+}
+
+.encabezado-detalle h1 {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.encabezado-detalle .boton-volver {
+  position: absolute;
+  left: 0;
+  top: 50%;
+
+  margin: 0;
+
+  transform: translateY(-50%);
+}
+
+.encabezado-detalle .boton-volver:hover {
+  transform: translateY(-50%) translateX(-2px);
+}
+
+@media (max-width: 700px) {
+  .encabezado-detalle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .encabezado-detalle h1 {
+    font-size: 1.6rem;
+    text-align: left;
+  }
+
+  .encabezado-detalle .boton-volver,
+  .encabezado-detalle .boton-volver:hover {
+    position: static;
+    transform: none;
+    text-decoration: none;
+  }
+}

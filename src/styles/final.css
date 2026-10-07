@@ -1,0 +1,302 @@
+/* Secciones finales: espacios reservados y contenido extenso con scroll. */
+.aviso-pwa {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: min(720px, calc(100% - 32px));
+  padding: 14px 18px;
+  border: 1px solid var(--celeste);
+  border-radius: 14px;
+  background: #171021;
+  box-shadow: 0 8px 32px #0008;
+  font-size: 0.88rem;
+}
+.aviso-pwa button {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--celeste);
+  color: #09070e;
+  cursor: pointer;
+}
+.buscador-estrenos {
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+}
+.grilla-estrenos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+.estrenos .tarjeta-estreno {
+  margin: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.tarjeta-estreno app-aviso-estreno {
+  margin-top: auto;
+}
+.aviso-estreno {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #8b5cf64d;
+  border-radius: 12px;
+  background: #8b5cf60d;
+}
+.tarjeta-estreno .aviso-estreno {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.aviso-estreno p {
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  min-height: 60px;
+  margin: 12px 0;
+}
+.etiqueta-beneficio,
+.aviso-preventa {
+  color: var(--celeste);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.estado-carga {
+  min-height: 48px;
+  max-height: 80px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+.aviso-estreno .estado-carga {
+  display: block;
+  height: 44px;
+  min-height: 44px;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  overflow: auto;
+}
+.aviso-estreno .boton-gestion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid #22d3ee66;
+  border-radius: 10px;
+  background: #22d3ee14;
+  color: var(--celeste);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.aviso-estreno .boton-gestion:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.grilla-historial {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.pelicula-historial {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 20px;
+  height: 420px;
+  margin: 0 !important;
+  overflow: hidden;
+}
+.poster-historial {
+  width: 140px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #231830;
+}
+.historial-datos {
+  overflow: auto;
+  min-width: 0;
+  scrollbar-gutter: stable;
+  padding-right: 6px;
+}
+.historial-datos h2 {
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+.historial-datos p {
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.calificacion-propia {
+  color: #fbbf24;
+}
+.codigo-historial {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 0.72rem;
+  color: var(--celeste);
+}
+.lista-notificaciones {
+  min-height: 300px;
+  max-height: 680px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.notificacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #8b5cf62e;
+  padding: 20px;
+}
+.notificacion.pendiente {
+  background: #8b5cf614;
+  border-left: 3px solid var(--celeste);
+}
+.notificacion h2 {
+  font-size: 1.15rem;
+}
+.notificacion p {
+  font-size: 0.88rem;
+  color: var(--texto-secundario);
+}
+.notificacion > div {
+  min-width: 0;
+}
+.notificacion .acciones-gestion {
+  flex-shrink: 0;
+}
+.opcion-credito {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.5;
+}
+.opcion-credito input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--violeta);
+}
+.aviso-credito {
+  padding: 16px;
+  color: var(--celeste);
+  border: 1px solid #22d3ee40;
+  border-radius: 12px;
+}
+.graficos-reportes > .panel {
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.graficos-reportes .ayuda-gestion {
+  min-height: 44px;
+}
+.scroll-grafico {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.grafico-barras {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.grafico-barras li {
+  margin: 0 0 24px;
+}
+.barra-etiqueta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 0.86rem;
+  margin-bottom: 10px;
+}
+.barra-etiqueta span {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.barra-etiqueta strong {
+  color: var(--celeste);
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+.barra-fondo {
+  height: 12px;
+  background: #8b5cf61a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.barra-fondo span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--violeta), var(--celeste));
+  border-radius: 8px;
+  min-width: 2px;
+}
+.reporte-diario-tabla {
+  margin-top: 24px;
+  max-height: 360px;
+  overflow: auto;
+}
+.actividad-tabla {
+  margin-top: 22px;
+  height: 520px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.actividad-tabla td {
+  max-width: 380px;
+  overflow-wrap: anywhere;
+}
+.actividad-tabla td:first-child {
+  min-width: 160px;
+}
+.detalle-auditoria {
+  max-height: 120px;
+  overflow: auto;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+}
+@media (max-width: 900px) {
+  .grilla-historial {
+    grid-template-columns: 1fr;
+  }
+  .notificacion {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (max-width: 520px) {
+  .pelicula-historial {
+    grid-template-columns: 95px minmax(0, 1fr);
+    padding: 16px;
+    gap: 14px;
+  }
+  .poster-historial {
+    width: 95px;
+    height: 145px;
+  }
+  .historial-datos h2 {
+    font-size: 1rem;
+  }
+  .aviso-pwa {
+    font-size: 0.8rem;
+    gap: 10px;
+  }
+}

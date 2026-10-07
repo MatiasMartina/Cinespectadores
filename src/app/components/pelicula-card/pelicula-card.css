@@ -1,0 +1,292 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.vista-previa .poster {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+.vista-previa .poster img,
+.poster-vacio {
+  flex: 1 1 220px;
+  min-height: 0;
+  max-height: 220px;
+  height: 220px;
+  object-fit: contain;
+}
+.poster-vacio {
+  display: grid;
+  place-items: center;
+  color: var(--texto-secundario);
+  padding: 20px;
+}
+.vista-previa .informacion {
+  flex-shrink: 0;
+  overflow: hidden;
+  position: static;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  padding: 16px;
+  gap: 12px;
+}
+.vista-previa .generos {
+  flex-wrap: nowrap;
+  margin-top: 0;
+  overflow: hidden;
+}
+.vista-previa .generos:empty {
+  display: none;
+}
+.vista-previa .genero {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vista-previa .generos-restantes {
+  flex-shrink: 0;
+}
+.vista-previa .titulo {
+  flex-shrink: 0;
+}
+.vista-previa .sinopsis,
+.vista-previa .titulo h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.vista-previa:hover .pelicula-card,
+.vista-previa:hover .poster img {
+  transform: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.pelicula-enlace {
+  display: block;
+  height: 100%;
+  border-radius: 24px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pelicula-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(139 92 246 / 25%);
+  border-radius: 24px;
+  background-color: #09070e;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.poster {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background-color: var(--fondo-caja);
+}
+
+.poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.informacion {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 18px;
+  overflow-y: auto;
+  padding: 24px;
+  background: linear-gradient(180deg, rgb(9 7 14 / 35%) 0%, rgb(9 7 14 / 88%) 40%, #09070e 100%);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s;
+}
+
+.informacion > * {
+  flex-shrink: 0;
+}
+
+.generos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.genero {
+  padding: 6px 11px;
+  border: 1px solid rgb(34 211 238 / 25%);
+  border-radius: 999px;
+  background-color: rgb(34 211 238 / 10%);
+  color: var(--celeste);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sinopsis {
+  margin: 0;
+  color: #e5e1ed;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.duracion {
+  color: #ddd6ee;
+  font-size: 0.85rem;
+}
+
+.clasificacion {
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 8px;
+  background-color: rgb(255 255 255 / 8%);
+  color: #f5f3ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ver-funciones {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background-color: #f5f3ff;
+  color: #140d22;
+  font-size: 0.9rem;
+  font-weight: 800;
+  transition: background-color 0.2s;
+}
+
+.ver-funciones > span {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.titulo {
+  padding: 20px 22px;
+}
+
+.titulo h3 {
+  margin: 0;
+  color: var(--texto-principal);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.pelicula-enlace:focus-visible {
+  outline: 2px solid var(--celeste);
+  outline-offset: 5px;
+}
+
+.pelicula-enlace:focus-visible .informacion {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.pelicula-enlace:focus-visible .pelicula-card {
+  border-color: var(--celeste);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pelicula-enlace:hover .pelicula-card {
+    transform: translateY(-5px);
+    border-color: rgb(139 92 246 / 65%);
+    box-shadow:
+      0 14px 30px rgb(0 0 0 / 35%),
+      0 0 20px rgb(139 92 246 / 12%);
+  }
+
+  .pelicula-enlace:hover .poster img {
+    transform: scale(1.05);
+  }
+
+  .pelicula-enlace:hover .informacion {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .ver-funciones:hover {
+    background-color: var(--celeste);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .poster {
+    aspect-ratio: auto;
+  }
+
+  .poster img {
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .informacion {
+    position: static;
+    padding: 20px;
+    background: #09070e;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .titulo {
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pelicula-card,
+  .poster img,
+  .informacion,
+  .ver-funciones {
+    transition: none;
+  }
+
+  .pelicula-enlace:hover .pelicula-card,
+  .pelicula-enlace:hover .poster img {
+    transform: none;
+  }
+}

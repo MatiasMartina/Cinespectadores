@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  width: 100%;
+}
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #403158;
+  border-radius: 12px;
+  background: #0e0918;
+  color: #f5f1ff;
+  font: inherit;
+  outline: none;
+}
+input:focus-visible {
+  border-color: #20cce7;
+  box-shadow: 0 0 0 3px #20cce721;
+}
+input[aria-invalid='true'] {
+  border-color: #ff759c;
+}
+input:disabled {
+  opacity: 0.55;
+}
+input::placeholder {
+  color: #9b90b4;
+}

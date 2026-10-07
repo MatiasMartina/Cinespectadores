@@ -1,0 +1,206 @@
+<main>
+  @if (cargando()) {
+    <p role="status">Cargando el resumen…</p>
+  } @else if (mensaje()) {
+    <p role="alert">{{ mensaje() }}</p>
+    <a routerLink="/pago">Revisar beneficios</a>
+  } @else if (funcion; as funcionEncontrada) {
+    @if (funcionEncontrada.esPreventa) {
+      <p class="aviso-preventa">
+        PREVENTA · Entrada base ${{ funcionEncontrada.precio.toLocaleString('es-AR') }}. El
+        adicional VIP se cobra aparte.
+      </p>
+    }
+    <section class="confirmacion">
+      <header class="confirmacion-encabezado">
+        <p class="confirmacion-etiqueta">CONFIRMACIÓN</p>
+        <h1>Resumen de tu compra</h1>
+        <p>Revisá los datos antes de finalizar.</p>
+      </header>
+
+      @if (pelicula(); as peliculaEncontrada) {
+        <section class="bloque-resumen pelicula-resumen">
+          <span class="bloque-etiqueta">PELÍCULA</span>
+
+          <h2>{{ peliculaEncontrada.nombre }}</h2>
+        </section>
+      }
+
+      <section class="bloque-resumen">
+        <div class="bloque-encabezado">
+          <span class="bloque-etiqueta">FUNCIÓN SELECCIONADA</span>
+
+          @if (!compraFinalizada) {
+            <a
+              class="boton-editar"
+              [routerLink]="['/pelicula', funcionEncontrada.peliculaId]"
+              [queryParams]="{ editar: true }"
+              aria-label="Editar función"
+              title="Editar función"
+            >
+              ✎
+            </a>
+          }
+        </div>
+
+        <div class="datos-funcion-confirmacion">
+          <p>
+            <span>Fecha</span>
+            <strong>{{ funcionEncontrada.fecha }}</strong>
+          </p>
+
+          <p>
+            <span>Horario</span>
+            <strong>{{ funcionEncontrada.hora }} hs</strong>
+          </p>
+
+          <p>
+            <span>Sala</span>
+            <strong>Sala {{ funcionEncontrada.salaNumero }}</strong>
+          </p>
+
+          <p>
+            <span>Formato</span>
+            <strong>{{ funcionEncontrada.formato }}</strong>
+          </p>
+
+          <p>
+            <span>Idioma</span>
+            <strong>{{ funcionEncontrada.idioma }}</strong>
+          </p>
+        </div>
+      </section>
+
+      <section class="bloque-resumen">
+        <div class="bloque-encabezado">
+          <span class="bloque-etiqueta">BUTACAS</span>
+
+          @if (!compraFinalizada) {
+            <a
+              class="boton-editar"
+              [routerLink]="['/funcion', funcionEncontrada.id, 'butacas']"
+              [queryParams]="{ editar: true }"
+              aria-label="Editar butacas"
+              title="Editar butacas"
+            >
+              ✎
+            </a>
+          }
+        </div>
+
+        <ul class="lista-butacas-confirmacion">
+          @for (butaca of butacasDetalle; track butaca.id) {
+            <li>
+              <strong>{{ butaca.id }}</strong>
+              <span class="tipo-butaca" [class]="'tipo-butaca tipo-' + butaca.tipo">
+                {{ butaca.etiqueta }}
+              </span>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section class="bloque-resumen">
+        <div class="bloque-encabezado">
+          <span class="bloque-etiqueta">CANDY BAR</span>
+          @if (!compraFinalizada) {
+            <a
+              class="boton-editar"
+              routerLink="/candy-bar"
+              [queryParams]="{ editar: true }"
+              aria-label="Editar Candy Bar"
+              title="Editar Candy Bar"
+            >
+              ✎
+            </a>
+          }
+        </div>
+
+        @if (itemsCandyBar.length > 0) {
+          <ul class="lista-candy">
+            @for (item of itemsCandyBar; track item.nombre) {
+              <li>
+                <span class="candy-item-nombre"> {{ item.cantidad }} × {{ item.nombre }} </span>
+                <strong>${{ item.subtotal }}</strong>
+              </li>
+            }
+          </ul>
+
+          <p class="candy-confirmacion">
+            Valor Candy Bar antes de beneficios: ${{ getTotalCandyBar() }}
+          </p>
+        } @else {
+          <p class="candy-vacio">No agregaste productos del Candy Bar.</p>
+        }
+      </section>
+
+      <section class="totales">
+        <div class="fila-total">
+          <span>Valor de las entradas</span>
+          <strong>${{ getTotalEntradas() }}</strong>
+        </div>
+
+        <div class="fila-total">
+          <span>Valor del Candy Bar incluido</span>
+          <strong>${{ getTotalCandyBar() }}</strong>
+        </div>
+
+        @if (ahorroCombo !== 0) {
+          <div class="fila-total">
+            <span>Ajuste por combo</span
+            ><strong
+              >{{ ahorroCombo > 0 ? '−' : '+' }}${{
+                (ahorroCombo < 0 ? -ahorroCombo : ahorroCombo).toLocaleString('es-AR')
+              }}</strong
+            >
+          </div>
+        }
+        @if (descuentoCanjes > 0) {
+          <div class="fila-total">
+            <span>Productos y entradas canjeados</span
+            ><strong>−${{ descuentoCanjes.toLocaleString('es-AR') }}</strong>
+          </div>
+        }
+        @if (descuentoPromocion > 0) {
+          <div class="fila-total">
+            <span>Beneficio de la cuenta</span
+            ><strong>−${{ descuentoPromocion.toLocaleString('es-AR') }}</strong>
+          </div>
+        }
+        <p class="ayuda-gestion">
+          Los combos y canjes elegidos se incluyen en el total. En el pago podés agregar beneficios
+          y revisar el detalle.
+        </p>
+        <div class="fila-total total-final">
+          <span>Total con beneficios de la cuenta</span>
+          <strong>${{ getTotalFinal() }}</strong>
+        </div>
+      </section>
+
+      <div class="acciones">
+        @if (!compraFinalizada) {
+          <button type="button" class="boton-cancelar" (click)="cancelarCompra()">
+            Cancelar compra
+          </button>
+
+          <a class="boton-finalizar" routerLink="/pago">
+            Continuar al pago
+            <span>→</span>
+          </a>
+        } @else {
+          <p class="exito">¡Compra realizada con éxito! Tus entradas fueron reservadas.</p>
+        }
+      </div>
+    </section>
+  } @else {
+    <section class="confirmacion confirmacion-vacia">
+      <p class="confirmacion-etiqueta">SIN COMPRA</p>
+
+      <h1>No hay una compra para confirmar</h1>
+
+      <p>Primero tenés que elegir una función y al menos una butaca.</p>
+
+      <a class="boton-secundario" routerLink="/"> Ir a la cartelera </a>
+    </section>
+  }
+</main>

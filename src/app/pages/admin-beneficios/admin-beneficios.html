@@ -1,0 +1,196 @@
+<h2>Combos y puntos</h2>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <div class="selector-catalogo" role="group" aria-label="Sección de combos y puntos">
+    <button
+      type="button"
+      [class.activo]="seccion() === 'combos'"
+      [attr.aria-pressed]="seccion() === 'combos'"
+      aria-controls="beneficios-combos"
+      (click)="seccion.set('combos')"
+    >
+      Combos
+    </button>
+    <button
+      type="button"
+      [class.activo]="seccion() === 'recompensas'"
+      [attr.aria-pressed]="seccion() === 'recompensas'"
+      aria-controls="beneficios-recompensas"
+      (click)="seccion.set('recompensas')"
+    >
+      Recompensas
+    </button>
+  </div>
+  <p
+    class="estado-carga"
+    role="status"
+    [class.error]="error()"
+    [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+  >
+    {{ cargando() ? mensaje() || 'Cargando beneficios…' : procesando() ? 'Guardando…' : mensaje() }}
+  </p>
+  <section
+    class="panel panel-catalogo panel-con-acciones"
+    aria-label="Gestión de combos y recompensas"
+  >
+    <div class="scroll-panel cuerpo-catalogo">
+      <!-- Ocultar conserva los borradores y la edición al alternar. -->
+      <div id="beneficios-combos" class="contenido-catalogo" [hidden]="seccion() !== 'combos'">
+        <section class="editor-beneficio" aria-label="Formulario de combo">
+          <h2>{{ comboId ? 'Editar combo' : 'Nuevo combo' }}</h2>
+          <form
+            id="form-combo"
+            class="form-gestion"
+            [formGroup]="formCombo"
+            (ngSubmit)="guardarCombo()"
+          >
+            <div class="campo-gestion">
+              <label for="nombreCombo">Nombre</label
+              ><input id="nombreCombo" formControlName="nombre" />
+            </div>
+            <div class="campo-gestion">
+              <label for="precioCombo">Precio fijo</label
+              ><input id="precioCombo" type="number" min="1" step="1" formControlName="precio" />
+            </div>
+            <div class="campo-gestion">
+              <label for="pochoclosCombo">Pochoclos incluidos</label
+              ><select id="pochoclosCombo" formControlName="pochoclosId">
+                <option [ngValue]="null">Elegí el producto</option>
+                @for (p of productos; track p.id) {
+                  <option [ngValue]="p.id">{{ p.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div class="campo-gestion">
+              <label for="bebidaCombo">Bebida incluida</label
+              ><select id="bebidaCombo" formControlName="bebidaId">
+                <option [ngValue]="null">Elegí la bebida</option>
+                @for (p of productos; track p.id) {
+                  <option [ngValue]="p.id">{{ p.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div class="campo-gestion campo-checkbox ancho-completo">
+              <input id="comboActivo" type="checkbox" formControlName="activo" />
+              <label for="comboActivo">Disponible para comprar</label>
+            </div>
+          </form>
+        </section>
+        <section class="lista-catalogo" aria-label="Combos cargados">
+          <h2>Combos cargados</h2>
+          <p class="ayuda-gestion">
+            Incluye una entrada común, un producto de pochoclos y una bebida. El adicional VIP se
+            suma al precio fijo.
+          </p>
+          <p class="cantidad-resultados">{{ combos().length }} combos</p>
+          <div class="scroll-panel">
+            @for (c of combos(); track c.id) {
+              <article class="registro-gestion sin-imagen">
+                <div>
+                  <h3 [title]="c.nombre">{{ c.nombre }}</h3>
+                  <p>Precio fijo: ${{ c.precio.toLocaleString('es-AR') }}</p>
+                  <span class="estado-gestion">{{ c.activo ? 'Activo' : 'Inactivo' }}</span>
+                </div>
+                <div class="acciones-gestion">
+                  <button type="button" (click)="editarCombo(c)">Editar</button>
+                </div>
+              </article>
+            } @empty {
+              <p>Todavía no hay combos cargados.</p>
+            }
+          </div>
+        </section>
+      </div>
+      <div
+        id="beneficios-recompensas"
+        class="contenido-catalogo"
+        [hidden]="seccion() !== 'recompensas'"
+      >
+        <section class="editor-beneficio" aria-label="Formulario de recompensa">
+          <h2>{{ recompensaId ? 'Editar recompensa' : 'Nueva recompensa' }}</h2>
+          <form
+            id="form-recompensa"
+            class="form-gestion"
+            [formGroup]="formRecompensa"
+            (ngSubmit)="guardarRecompensa()"
+          >
+            <div class="campo-gestion">
+              <label for="nombreRecompensa">Nombre</label
+              ><input id="nombreRecompensa" formControlName="nombre" />
+            </div>
+            <div class="campo-gestion">
+              <label for="tipoRecompensa">Tipo</label
+              ><select id="tipoRecompensa" formControlName="tipo">
+                <option value="entrada">Entrada común</option>
+                <option value="producto">Producto Candy Bar</option>
+              </select>
+            </div>
+            <div class="campo-gestion">
+              <label for="puntosRecompensa">Costo en puntos</label
+              ><input
+                id="puntosRecompensa"
+                type="number"
+                min="1"
+                step="1"
+                formControlName="puntos"
+              />
+            </div>
+            @if (formRecompensa.controls.tipo.value === 'producto') {
+              <div class="campo-gestion">
+                <label for="productoRecompensa">Producto gratuito</label
+                ><select id="productoRecompensa" formControlName="productoId">
+                  <option [ngValue]="null">Elegí el producto</option>
+                  @for (p of productos; track p.id) {
+                    <option [ngValue]="p.id">{{ p.nombre }}</option>
+                  }
+                </select>
+              </div>
+            }
+            <div class="campo-gestion campo-checkbox ancho-completo">
+              <input id="recompensaActiva" type="checkbox" formControlName="activa" />
+              <label for="recompensaActiva">Disponible para canjear</label>
+            </div>
+          </form>
+        </section>
+        <section class="lista-catalogo" aria-label="Recompensas cargadas">
+          <h2>Recompensas cargadas</h2>
+          <p class="ayuda-gestion">
+            Un peso pagado acredita un punto. Los costos nuevos se aplican a canjes futuros.
+          </p>
+          <p class="cantidad-resultados">{{ recompensas().length }} recompensas</p>
+          <div class="scroll-panel">
+            @for (recompensa of recompensas(); track recompensa.id) {
+              <article class="registro-gestion sin-imagen">
+                <div>
+                  <h3 [title]="recompensa.nombre">{{ recompensa.nombre }}</h3>
+                  <p>
+                    {{ recompensa.puntos }} puntos ·
+                    {{ recompensa.tipo === 'entrada' ? 'Entrada común' : 'Producto Candy Bar' }}
+                  </p>
+                  <span class="estado-gestion">{{
+                    recompensa.activa ? 'Activa' : 'Inactiva'
+                  }}</span>
+                </div>
+                <div class="acciones-gestion">
+                  <button type="button" (click)="editarRecompensa(recompensa)">Editar</button>
+                </div>
+              </article>
+            } @empty {
+              <p>Todavía no hay recompensas cargadas.</p>
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="pie-panel pie-catalogo">
+      <div class="acciones-gestion">
+        @if (seccion() === 'combos') {
+          <button type="submit" form="form-combo" class="primario">Guardar combo</button>
+          <button type="button" (click)="cancelarCombo()">Cancelar edición</button>
+        } @else {
+          <button type="submit" form="form-recompensa" class="primario">Guardar recompensa</button>
+          <button type="button" (click)="cancelarRecompensa()">Cancelar edición</button>
+        }
+      </div>
+    </div>
+  </section>
+</fieldset>

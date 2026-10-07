@@ -1,0 +1,59 @@
+<main>
+  <section class="inicio-sesion-layout">
+    <aside class="marca-panel">
+      <div class="marca-contenido">
+        <p class="marca-etiqueta">TU PRÓXIMA FUNCIÓN</p>
+        <h2>Viví el cine como nunca antes.</h2>
+        <p>Ingresá a tu cuenta, elegí tus butacas y disfrutá de cada estreno.</p>
+      </div>
+
+      <p class="marca-pie">Tu entrada al mejor plan</p>
+    </aside>
+
+    <section class="form-panel">
+      <header class="encabezado-formulario">
+        <p class="form-etiqueta">CINE SPECTADORES</p>
+        <h1>Iniciar sesión</h1>
+        <p>Ingresá tus datos para acceder a tu cuenta.</p>
+      </header>
+
+      <form [formGroup]="formInicioSesion" (ngSubmit)="iniciarSesion()" novalidate>
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" autocomplete="username" formControlName="email" />
+
+          @if (email.invalid && (email.touched || formularioEnviado)) {
+            <p class="mensaje-error">Ingresá un email válido, por ejemplo nombre@dominio.com.</p>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input
+            id="contrasena"
+            type="password"
+            autocomplete="current-password"
+            formControlName="contrasena"
+          />
+
+          @if (contrasena.invalid && (contrasena.touched || formularioEnviado)) {
+            <p class="mensaje-error">La contraseña debe tener al menos 6 caracteres.</p>
+          }
+        </div>
+
+        @if (mensajeError) {
+          <p class="mensaje-error" role="alert">{{ mensajeError }}</p>
+        }
+
+        <button type="submit" class="boton-ingresar" [disabled]="procesando() || cargandoSesion()">
+          {{ cargandoSesion() ? 'Cargando sesión…' : procesando() ? 'Ingresando…' : 'Ingresar' }}
+        </button>
+      </form>
+
+      <p class="crear-cuenta">
+        ¿Todavía no tenés una cuenta?
+        <a routerLink="/registro" [queryParams]="{ returnUrl: returnUrl }">Registrarme</a>
+      </p>
+    </section>
+  </section>
+</main>

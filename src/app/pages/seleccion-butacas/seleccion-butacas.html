@@ -1,0 +1,191 @@
+<main>
+  @if (mensajeCarga()) {
+    <p role="alert">{{ mensajeCarga() }}</p>
+  }
+  @if (cargando()) {
+    <p>Cargando función...</p>
+  } @else if (funcion; as funcionEncontrada) {
+    @if (funcionEncontrada.esPreventa) {
+      <p class="aviso-preventa">
+        PREVENTA · Entrada base ${{ funcionEncontrada.precio.toLocaleString('es-AR') }}. El
+        adicional VIP se cobra aparte.
+      </p>
+    }
+    <div class="encabezado-butacas">
+      <button type="button" class="boton-volver" (click)="volver()">Volver</button>
+
+      <h1>Elegí tus butacas</h1>
+    </div>
+
+    <div class="compra-layout">
+      <section class="resumen-funcion">
+        @if (pelicula; as peliculaEncontrada) {
+          <div class="poster-funcion">
+            <img
+              [src]="peliculaEncontrada.imagenUrl"
+              [alt]="'Póster de ' + peliculaEncontrada.nombre"
+            />
+
+            <span class="clasificacion">
+              {{
+                peliculaEncontrada.edadMinima === 0 ? 'ATP' : '+' + peliculaEncontrada.edadMinima
+              }}
+            </span>
+          </div>
+
+          <div class="detalle-funcion">
+            <p class="funcion-etiqueta">FUNCIÓN SELECCIONADA</p>
+
+            <h2>{{ peliculaEncontrada.nombre }}</h2>
+
+            <div class="chips-funcion">
+              <span>{{ funcionEncontrada.formato }}</span>
+              <span>{{ funcionEncontrada.idioma }}</span>
+            </div>
+
+            <div class="datos-funcion">
+              <p>
+                <strong>Fecha</strong>
+                {{ funcionEncontrada.fecha }}
+              </p>
+
+              <p>
+                <strong>Horario</strong>
+                {{ funcionEncontrada.hora }} hs
+              </p>
+
+              <p>
+                <strong>Sala</strong>
+                Sala {{ funcionEncontrada.salaNumero }}
+              </p>
+            </div>
+
+            <div class="precio-funcion">
+              <span>Entrada desde</span>
+              <strong>${{ funcionEncontrada.precio }}</strong>
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="mapa-butacas">
+        <div class="referencias">
+          <span>
+            <i class="color comun"></i>
+            Disponible
+          </span>
+
+          <span>
+            <i class="color accesible"></i>
+            Accesible
+          </span>
+
+          <span>
+            <i class="color vip"></i>
+            VIP (+${{ getPrecioExtraVip() }})
+          </span>
+
+          <span>
+            <i class="color seleccionada"></i>
+            Seleccionada
+          </span>
+
+          <span>
+            <i class="color ocupada"></i>
+            Ocupada
+          </span>
+        </div>
+
+        <p class="pantalla">PANTALLA</p>
+
+        <app-mapa-butacas
+          [filas]="filas"
+          [butacasOcupadas]="butacasOcupadas()"
+          [butacasSeleccionadas]="butacasSeleccionadas"
+          [compacto]="false"
+          (butacaElegida)="seleccionarButaca($event)"
+        ></app-mapa-butacas>
+      </section>
+
+      <aside class="resumen-compra">
+        <p class="compra-etiqueta">TU COMPRA</p>
+        <h2>Tu selección</h2>
+
+        <div class="datos-compra">
+          <p>
+            <span>Entradas</span>
+            <strong>{{ getCantidadButacasSeleccionadas() }}</strong>
+          </p>
+
+          <div class="butacas-elegidas">
+            <span>Butacas seleccionadas</span>
+
+            @if (butacasSeleccionadas.length > 0) {
+              <ul class="lista-butacas">
+                @for (butaca of butacasSeleccionadas; track butaca) {
+                  <li>
+                    <span>Butaca</span>
+
+                    <div class="item-butaca-acciones">
+                      <span class="precio-butaca">
+                        ${{ getPrecioButacaSeleccionada(butaca) }}
+                      </span>
+
+                      <strong>{{ butaca }}</strong>
+
+                      <button
+                        type="button"
+                        [attr.aria-label]="'Quitar butaca ' + butaca"
+                        (click)="quitarButacaSeleccionada(butaca)"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="sin-butacas">Todavía no seleccionaste butacas.</p>
+            }
+          </div>
+        </div>
+
+        @if (requiereFechaNacimientoInvitado) {
+          <div class="edad-invitado">
+            <label for="fechaNacimientoInvitado"> Fecha de nacimiento </label>
+
+            <app-fecha-nacimiento
+              identificador="fechaNacimientoInvitado"
+              [(ngModel)]="fechaNacimientoInvitado"
+            ></app-fecha-nacimiento>
+
+            <small> La usamos únicamente para verificar la restricción de edad. </small>
+          </div>
+        } @else if (edadInvitadoYaValidada) {
+          <p class="edad-validada">✓ Edad validada para esta compra</p>
+        }
+
+        <div class="total">
+          <span>Total</span>
+          <strong>${{ getTotal() }}</strong>
+        </div>
+
+        <button
+          type="button"
+          [disabled]="
+            getCantidadButacasSeleccionadas() === 0 ||
+            (requiereFechaNacimientoInvitado && fechaNacimientoInvitado.length !== 10)
+          "
+          (click)="confirmarCompra()"
+        >
+          Confirmar selección
+          <span>→</span>
+        </button>
+      </aside>
+    </div>
+  } @else {
+    <h1>Función no encontrada</h1>
+
+    <p>La función solicitada no existe o fue eliminada.</p>
+  }
+</main>

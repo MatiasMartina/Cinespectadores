@@ -1,0 +1,54 @@
+<div [class]="compacto() ? 'mini-filas' : 'filas'" [class.solo-lectura]="soloLectura()">
+  @for (fila of filas(); track fila.nombre) {
+    <div [class]="compacto() ? 'mini-fila' : 'fila'" [class.fila-accesible]="fila.nombre === 'AC'">
+      <span [class]="compacto() ? 'mini-nombre-fila' : 'nombre-fila'">
+        {{ fila.nombre }}
+      </span>
+
+      <div [class]="compacto() ? 'mini-bloques' : 'bloques'">
+        @for (bloque of bloques; track bloque) {
+          <div
+            [class]="compacto() ? 'mini-bloque' : 'bloque'"
+            [class.mini-bloque-centro]="compacto() && bloque === 1"
+            [class.bloque-centro]="!compacto() && bloque === 1"
+          >
+            @for (butaca of getButacasDelBloque(fila, bloque); track butaca.id) {
+              @if (compacto()) {
+                <i
+                  class="mini-asiento"
+                  aria-hidden="true"
+                  [class.ocupada]="estaOcupada(butaca)"
+                  [class.seleccionada]="estaSeleccionada(butaca)"
+                  [attr.title]="'Butaca ' + butaca.id"
+                  [class.deshabilitada]="butaca.habilitada === false"
+                  [class.comun]="butaca.tipo === 'Comun'"
+                  [class.accesible]="butaca.tipo === 'Accesible'"
+                  [class.vip]="butaca.tipo === 'VIP'"
+                ></i>
+              } @else {
+                <button
+                  type="button"
+                  [class.vip]="butaca.tipo === 'VIP'"
+                  [class.accesible]="butaca.tipo === 'Accesible'"
+                  [class.seleccionada]="estaSeleccionada(butaca)"
+                  [class.ocupada]="estaOcupada(butaca)"
+                  [disabled]="
+                    soloLectura() ||
+                    estaOcupada(butaca) ||
+                    (butaca.habilitada === false && !permitirDeshabilitadas())
+                  "
+                  [attr.aria-label]="'Butaca ' + butaca.id + ', ' + butaca.tipo"
+                  [attr.aria-pressed]="estaSeleccionada(butaca)"
+                  [attr.title]="'Butaca ' + butaca.id"
+                  (click)="elegirButaca(butaca)"
+                >
+                  {{ butaca.numero }}
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

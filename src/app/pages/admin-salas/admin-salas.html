@@ -1,0 +1,76 @@
+<h2>Salas y distribución de butacas</h2>
+<p
+  class="estado-carga"
+  aria-live="polite"
+  [class.error]="error()"
+  [class.sin-mensaje]="!cargando() && !procesando() && !mensaje()"
+>
+  {{
+    cargando() ? mensaje() || 'Cargando datos…' : procesando() ? 'Guardando cambios…' : mensaje()
+  }}
+</p>
+<fieldset class="gestion-contenido" [disabled]="cargando() || procesando()">
+  <div class="gestion-layout">
+    <app-formulario-catalogo
+      [titulo]="editandoId ? 'Editar sala' : 'Nueva sala'"
+      [campos]="campos"
+      [valores]="valores"
+      (guardado)="guardar($event)"
+      (cancelado)="cancelar()"
+    ></app-formulario-catalogo>
+    <section class="panel lista-gestion" aria-label="Salas cargadas">
+      <p class="ayuda-gestion">
+        Cada sala empieza con la distribución del cine: bloques 4–20–4 y fila accesible AC de 2–10–2
+        en lugar de J y K. Las filas R, S y T son VIP.
+      </p>
+      <div class="scroll-panel">
+        @for (sala of salas; track sala.id) {
+          <article class="registro-gestion sin-imagen">
+            <div>
+              <h3>{{ sala.nombre }} · Nº {{ sala.numero }}</h3>
+              <p>{{ getCapacidad(sala) }} butacas · {{ sala.formatos.join(', ') }}</p>
+              <span class="estado-gestion">{{ sala.activa ? 'Habilitada' : 'Deshabilitada' }}</span>
+            </div>
+            <div class="acciones-gestion">
+              <button (click)="editar(sala)">Editar</button
+              ><button (click)="abrirMapa(sala)">Butacas</button
+              ><button class="peligro" (click)="eliminar(sala)">Eliminar</button>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  </div>
+  @if (salaMapa; as sala) {
+    <section class="panel panel-con-acciones">
+      <div class="contenido-panel">
+        <h2>Butacas de {{ sala.nombre }}</h2>
+        <p class="ayuda-gestion">
+          Seleccioná las butacas para cambiar su tipo o habilitación. Los cambios se aplican a esta
+          sala. Las butacas vendidas para funciones futuras están protegidas.
+        </p>
+        <div class="editor-mapa">
+          <app-mapa-butacas
+            [filas]="filas"
+            [butacasSeleccionadas]="seleccionadas"
+            [permitirDeshabilitadas]="true"
+            (butacaElegida)="elegir($event)"
+          ></app-mapa-butacas>
+        </div>
+      </div>
+      <div class="acciones-gestion pie-panel">
+        <label for="tipoButaca">Tipo</label
+        ><select id="tipoButaca" [(ngModel)]="tipo">
+          <option value="Comun">Común</option>
+          <option value="Accesible">Accesible</option>
+          <option value="VIP">VIP</option>
+        </select>
+        <label><input type="checkbox" [(ngModel)]="habilitada" /> Habilitadas</label>
+        <button class="primario" [disabled]="seleccionadas.length === 0" (click)="guardarButacas()">
+          Aplicar a {{ seleccionadas.length }} butacas
+        </button>
+        <button (click)="seleccionadas = []">Limpiar selección</button>
+      </div>
+    </section>
+  }
+</fieldset>

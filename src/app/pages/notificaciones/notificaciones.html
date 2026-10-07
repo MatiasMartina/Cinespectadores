@@ -1,0 +1,40 @@
+<main class="gestion notificaciones">
+  <header class="gestion-encabezado">
+    <div>
+      <p class="etiqueta-gestion">CINE SPECTADORES · MIS ALERTAS</p>
+      <h1>Notificaciones</h1>
+      <p>Los avisos quedan guardados en tu cuenta aunque cierres la página.</p>
+    </div>
+    <button type="button" [disabled]="procesando()" (click)="actualizar()">Actualizar</button>
+  </header>
+  <p class="estado-carga" role="status">
+    {{ procesando() ? 'Consultando avisos…' : mensaje() || alertas.mensaje() }}
+  </p>
+  <section class="panel lista-notificaciones">
+    @for (n of alertas.notificaciones(); track n.id) {
+      <article class="notificacion" [class.pendiente]="!n.leida">
+        <div>
+          <span class="etiqueta-gestion">{{ n.fecha | date: 'dd/MM/yyyy HH:mm' : '-0300' }}</span>
+          <h2>{{ n.titulo }}</h2>
+          <p>{{ n.mensaje }}</p>
+        </div>
+        <div class="acciones-gestion">
+          <a
+            class="boton-gestion primario"
+            [routerLink]="['/pelicula', n.peliculaId]"
+            (click)="leer(n.id)"
+            >Ver funciones</a
+          >
+          @if (!n.leida) {
+            <button type="button" (click)="leer(n.id)">Marcar como leída</button>
+          }
+        </div>
+      </article>
+    } @empty {
+      <p>
+        No tenés avisos todavía. Podés activar alertas desde
+        <a routerLink="/proximamente">Próximamente</a>.
+      </p>
+    }
+  </section>
+</main>

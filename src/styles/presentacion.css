@@ -1,0 +1,804 @@
+﻿/* Alineación compartida por las páginas y los componentes standalone. */
+:root {
+  --altura-panel-gestion: 32rem;
+  --borde-panel: 1px solid rgb(139 92 246 / 28%);
+  --radio-panel: 20px;
+}
+
+app-candy-bar .boton-continuar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Quitar la separación exterior entre el navbar y todas las páginas de la ruta. */
+.contenido-aplicacion > router-outlet + * {
+  display: block;
+}
+.contenido-aplicacion > router-outlet + * > main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.contenido-aplicacion > router-outlet + * > main > :first-child,
+.contenido-aplicacion > router-outlet + * > main > .gestion-encabezado .etiqueta-gestion {
+  margin-top: 0 !important;
+}
+/* El centrado vertical de estas páginas también dejaba un espacio vacío arriba. */
+.contenido-aplicacion
+  > router-outlet
+  + :is(app-inicio-sesion, app-registro, app-confirmacion-compra)
+  > main {
+  min-height: 0 !important;
+  align-items: start !important;
+  align-content: start;
+}
+app-pago :is(.pago-exitoso, .pago-etiqueta) {
+  margin-top: 0 !important;
+}
+
+/* Centrar la compra aprobada en el espacio disponible debajo del navbar. */
+app-pago:has(.pago-exitoso) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+app-pago:has(.pago-exitoso) > main {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  margin-block: 0;
+}
+app-pago:has(.pago-exitoso) .pago {
+  padding-block: 24px;
+}
+app-pago:has(.pago-exitoso) .pago-exitoso {
+  margin: 0 auto;
+}
+
+body :is(h1, h2, h3, h4, h5, h6) {
+  text-align: center !important;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+body :is(button, a[class*='boton'], a[role='button']) {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.boton-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid #8b5cf659;
+  border-radius: 999px;
+  background: #8b5cf614;
+  color: var(--texto-principal);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.boton-volver:hover {
+  background: #8b5cf62e;
+  border-color: var(--celeste);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--celeste);
+  outline-offset: 3px;
+}
+
+:is(.panel, .bloque-resumen, .totales, .beneficios-compra, .formulario-pago) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gestion .panel {
+  width: 100%;
+}
+/* Titulos cerca del borde superior en todos los paneles de administracion. */
+.gestion.administracion .panel {
+  padding-top: 12px;
+}
+.gestion.administracion
+  :is(.panel, .contenido-panel, .lista-catalogo, .editor-categoria, .editor-beneficio)
+  > :is(h2, h3) {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+.gestion.administracion .selector-catalogo {
+  width: fit-content;
+  margin: 0 auto 8px;
+}
+.gestion.administracion .cuerpo-catalogo {
+  padding-top: 0;
+}
+/* Las acciones del panel quedan fuera del contenido que puede desplazarse. */
+.gestion .panel-con-acciones {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.gestion .contenido-panel {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  padding: 2px 6px 2px 2px;
+}
+.gestion .pie-panel {
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 12px;
+}
+
+.gestion .gestion-layout {
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.gestion .gestion-layout > .panel {
+  height: var(--altura-panel-gestion);
+  min-height: 0;
+  margin: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Los formularios están dentro de un componente: igualar también su panel. */
+.gestion app-formulario-catalogo {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+}
+.gestion .gestion-layout > app-formulario-catalogo > .panel {
+  height: var(--altura-panel-gestion);
+  margin: 0;
+}
+.gestion app-formulario-catalogo > .panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.gestion app-formulario-catalogo .form-gestion {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.gestion app-formulario-catalogo .campos-catalogo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: inherit;
+  width: 100%;
+  min-height: 0;
+  align-content: start;
+  overflow: auto;
+  padding: 4px 6px 4px 2px;
+}
+/* El formulario corto de cupones entra completo en su panel. */
+.gestion.administracion app-admin-cupones app-formulario-catalogo .campos-catalogo {
+  flex-shrink: 0;
+  overflow: visible;
+}
+.gestion.administracion:has(app-admin-cupones) {
+  padding-bottom: 8px;
+}
+.gestion.administracion app-admin-cupones .gestion-layout {
+  margin-bottom: 0;
+}
+.gestion.administracion app-admin-cupones .gestion-layout > app-formulario-catalogo > .panel {
+  height: auto;
+}
+.gestion.administracion app-admin-cupones .panel {
+  padding-bottom: 12px;
+}
+/* Este checkbox no tiene validadores ni necesita reservar una fila de error. */
+.gestion.administracion app-admin-cupones .campo-checkbox > .error-campo {
+  display: none;
+}
+@media (min-width: 1001px) {
+  .gestion.administracion app-admin-cupones app-formulario-catalogo .form-gestion {
+    gap: 6px;
+  }
+  /* La lista toma la altura del formulario sin agrandar la fila por sus registros. */
+  .gestion.administracion app-admin-cupones .gestion-layout > .lista-gestion {
+    height: 0;
+    min-height: 100%;
+  }
+}
+@media (max-width: 1000px) {
+  .gestion.administracion app-admin-cupones .gestion-layout > .lista-gestion {
+    height: auto;
+    max-height: 24rem;
+  }
+}
+.gestion app-formulario-catalogo .form-gestion > .acciones-gestion {
+  width: 100%;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.gestion .campo-gestion > label {
+  min-height: 2.4em;
+  line-height: 1.2;
+}
+.gestion .error-campo {
+  display: block;
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 0.8rem;
+}
+.gestion .form-gestion > .acciones-gestion {
+  justify-content: center;
+}
+/* Un mismo espaciado para todos los formularios de administracion. */
+.gestion.administracion .form-gestion {
+  gap: 10px;
+  align-items: start;
+}
+.gestion.administracion .campo-gestion {
+  gap: 4px;
+}
+.gestion.administracion .campo-gestion > label {
+  min-height: 0;
+  line-height: 1.3;
+}
+.gestion.administracion :is(input:not([type='checkbox']), select, textarea) {
+  padding: 9px 10px;
+}
+.gestion.administracion .filtros-gestion label {
+  gap: 4px;
+}
+.gestion.administracion .error-campo {
+  min-height: 1.25em;
+  line-height: 1.25;
+}
+.gestion.administracion .campo-checkbox {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 0 8px;
+}
+.gestion.administracion .campo-checkbox > input {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+}
+.gestion.administracion .campo-checkbox > label {
+  grid-column: 2;
+  grid-row: 1;
+}
+.gestion.administracion .campo-checkbox > small {
+  grid-column: 1 / -1;
+}
+.gestion .ayuda-gestion {
+  text-align: center;
+}
+.gestion .panel h2,
+.gestion .panel h3 {
+  flex-shrink: 0;
+}
+.gestion .pestanas-gestion {
+  margin-bottom: 16px;
+}
+.gestion .subnav-gestion {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.gestion .lista-gestion,
+.gestion .panel-listado,
+.gestion .panel-previa,
+.gestion .panel-programacion {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.gestion .panel-listado,
+.gestion .panel-programacion {
+  height: var(--altura-panel-gestion);
+}
+.gestion .scroll-panel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  padding: 3px 6px 3px 2px;
+}
+.gestion .filtros-gestion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+.gestion .filtros-gestion label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.gestion .cantidad-resultados {
+  margin: 8px 0;
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+}
+.gestion .barra-listado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  font-size: 0.8rem;
+}
+.gestion .registro-gestion,
+.gestion .registro-gestion:first-child,
+.gestion .registro-gestion:last-child {
+  grid-template-columns: 45px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  height: 88px;
+  padding: 10px 0;
+}
+.gestion .registro-gestion.sin-imagen {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.gestion .registro-gestion img {
+  width: 45px;
+  height: 64px;
+}
+.gestion .registro-gestion .acciones-gestion,
+.gestion .registro-gestion.sin-imagen .acciones-gestion {
+  grid-column: auto;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
+.gestion .registro-gestion button {
+  padding: 8px 10px;
+}
+.gestion .datos-registro,
+.gestion .registro-gestion > div:first-of-type {
+  min-width: 0;
+  overflow: hidden;
+}
+.gestion .registro-gestion h3,
+.gestion .registro-gestion p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 4px 0;
+}
+.gestion .registro-gestion .estado-gestion {
+  margin: 0;
+  padding: 2px 6px;
+}
+.gestion .registro-gestion p + p {
+  margin: 2px 0;
+}
+.gestion .fila-gestion {
+  padding: 10px 0;
+  min-height: 48px;
+}
+.gestion .editor-pelicula {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.gestion .panel-previa .contenido-previa {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 3px 6px 3px 2px;
+}
+.gestion .panel-previa app-pelicula-card {
+  flex: 0 1 auto;
+  min-height: 0;
+  height: auto;
+  width: min(320px, 100%);
+  margin: 0 auto;
+  zoom: 0.9;
+}
+.gestion .resumen-previa {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+}
+.gestion .resumen-previa dt {
+  overflow-wrap: anywhere;
+}
+.gestion .resumen-previa dd {
+  margin: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 360px) {
+  .gestion .resumen-previa {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+.gestion .opciones-generos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 100px;
+  overflow: auto;
+  padding: 3px;
+}
+.gestion .opciones-generos button {
+  padding: 6px 10px;
+}
+.gestion .panel-catalogo {
+  display: flex;
+  flex-direction: column;
+  height: var(--altura-panel-gestion);
+  overflow: hidden;
+}
+.gestion .selector-catalogo {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 14px;
+  background: var(--fondo-input);
+  flex-shrink: 0;
+}
+.gestion .selector-catalogo button {
+  min-width: 120px;
+  border-color: transparent;
+  background: transparent;
+}
+.gestion .selector-catalogo button.activo {
+  color: var(--celeste);
+  border-color: var(--celeste);
+  background: rgba(34, 211, 238, 0.12);
+}
+.gestion .contenido-catalogo,
+.gestion .pie-catalogo {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.3fr);
+  gap: 24px;
+}
+.gestion .contenido-catalogo {
+  height: 100%;
+  min-height: 0;
+}
+.gestion .pie-catalogo {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+  padding: 0 6px 0 2px;
+}
+.gestion .pie-catalogo > .acciones-gestion {
+  justify-content: center;
+}
+.gestion .contenido-catalogo[hidden] {
+  display: none;
+}
+.gestion .panel-catalogo app-formulario-catalogo > .panel {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.gestion .panel-catalogo .lista-catalogo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid rgba(139, 92, 246, 0.25);
+  padding-left: 24px;
+}
+.gestion .panel-catalogo .form-categoria {
+  display: grid;
+  gap: 10px;
+}
+.gestion .panel-catalogo .fila-gestion > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.gestion .panel-catalogo .fila-gestion .acciones-gestion {
+  flex-shrink: 0;
+}
+.gestion
+  :is(
+    .panel,
+    .contenido-panel,
+    .pie-catalogo,
+    .campos-catalogo,
+    .scroll-panel,
+    .form-gestion,
+    .lista-beneficios,
+    .historial-puntos,
+    .actividad-tabla,
+    .opciones-generos
+  ) {
+  scrollbar-width: thin;
+  scrollbar-color: #7354a1 #171126;
+  color-scheme: dark;
+}
+.gestion ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.gestion ::-webkit-scrollbar-track {
+  background: #171126;
+  border-radius: 20px;
+}
+.gestion ::-webkit-scrollbar-thumb {
+  background: #7354a1;
+  border-radius: 20px;
+  border: 2px solid #171126;
+}
+.gestion .panel-listado td,
+.gestion .panel-listado th {
+  padding: 9px 8px;
+}
+.gestion .panel-listado table {
+  min-width: 850px;
+}
+.gestion .panel-listado td {
+  height: 62px;
+  white-space: nowrap;
+}
+.gestion .panel-listado td:nth-child(2) {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gestion .panel-listado td .acciones-gestion {
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 1000px) {
+  .gestion .editor-pelicula {
+    grid-template-columns: 1fr;
+  }
+  .gestion .contenido-catalogo,
+  .gestion .pie-catalogo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gestion .contenido-catalogo {
+    height: auto;
+  }
+  .gestion .panel-catalogo .lista-catalogo {
+    height: 360px;
+    border-left: 0;
+    border-top: 1px solid rgba(139, 92, 246, 0.25);
+    padding: 20px 0 0;
+  }
+}
+@media (max-width: 600px) {
+  .gestion app-formulario-catalogo .campos-catalogo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gestion.administracion app-admin-cupones app-formulario-catalogo .form-gestion {
+    gap: 6px;
+  }
+  .gestion.administracion
+    app-admin-cupones
+    app-formulario-catalogo
+    .campo-gestion:not(.campo-checkbox) {
+    gap: 2px;
+  }
+  .gestion.administracion app-admin-cupones app-formulario-catalogo input:not([type='checkbox']) {
+    padding: 7px 10px;
+  }
+  .gestion.administracion
+    app-admin-cupones
+    app-formulario-catalogo
+    .campo-gestion
+    > small:not(.error-campo) {
+    line-height: 1.3;
+  }
+  .gestion .registro-gestion,
+  .gestion .registro-gestion:first-child,
+  .gestion .registro-gestion:last-child,
+  .gestion .registro-gestion.sin-imagen {
+    grid-template-columns: minmax(0, 1fr) auto;
+    height: 128px;
+    gap: 8px;
+  }
+  .gestion .registro-gestion img {
+    display: none;
+  }
+  .gestion .registro-gestion .acciones-gestion {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .gestion .registro-gestion button {
+    width: 80px;
+    flex-grow: 0;
+    padding: 7px 5px;
+  }
+  .gestion .filtros-gestion {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gestion .barra-listado {
+    flex-wrap: wrap;
+  }
+  .gestion .campo-gestion > label {
+    min-height: 0;
+  }
+}
+
+.gestion-encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) minmax(0, 1fr);
+  text-align: center;
+}
+
+.gestion-encabezado > div:first-child {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.gestion-encabezado > :is(button, a, .acciones-gestion) {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.gestion .pestanas-gestion {
+  justify-content: center;
+}
+
+.gestion .estado-carga {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 0 0 8px;
+  overflow: auto;
+}
+/* Compactar separaciones entre secciones; los mensajes vacios no ocupan una fila. */
+.gestion.administracion .gestion-encabezado {
+  margin-bottom: 14px;
+}
+.gestion.administracion .pestanas-gestion {
+  margin-bottom: 8px;
+}
+.gestion.administracion .subnav-gestion {
+  margin: 0 0 8px;
+}
+.gestion.administracion > router-outlet + * {
+  display: block;
+}
+.gestion.administracion > router-outlet + * > h2 {
+  margin: 0 0 4px;
+}
+.gestion.administracion h2 {
+  margin-bottom: 8px;
+}
+.gestion.administracion .ayuda-gestion {
+  margin: 4px 0 8px;
+}
+.gestion.administracion .gestion-layout {
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.gestion.administracion .panel {
+  margin-bottom: 12px;
+}
+.gestion.administracion .panel-precios {
+  margin-bottom: 8px;
+}
+.gestion.administracion .gestion-layout > .panel,
+.gestion.administracion .gestion-layout > app-formulario-catalogo > .panel,
+.gestion.administracion .panel-catalogo app-formulario-catalogo > .panel {
+  margin: 0;
+}
+.gestion.administracion .estado-carga {
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  margin: 0 0 4px;
+}
+.gestion.administracion .estado-carga.sin-mensaje {
+  height: 0;
+  min-height: 0;
+  max-height: 0;
+  margin: 0;
+}
+
+.gestion .indicadores-gestion {
+  align-items: stretch;
+}
+
+.gestion .indicador {
+  display: flex;
+  min-height: 116px;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.gestion table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #171126;
+}
+
+.gestion table td:first-child {
+  white-space: nowrap;
+}
+
+.gestion .historial-puntos {
+  scrollbar-width: thin;
+  scrollbar-color: #655080 transparent;
+}
+
+.encabezado-formulario,
+.marca-contenido,
+.marca-pie {
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .gestion-encabezado {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .gestion-encabezado > div:first-child,
+  .gestion-encabezado > :is(button, a, .acciones-gestion) {
+    grid-column: 1;
+    justify-self: center;
+  }
+}
+
+/* Acciones del carrito del Candy Bar. */
+app-candy-bar .pedido-acciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+app-candy-bar .pedido-acciones button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 8px;
+  border: 1px solid rgb(139 92 246 / 35%);
+  border-radius: 12px;
+  background: rgb(139 92 246 / 8%);
+  color: var(--texto-principal);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+app-candy-bar .pedido-acciones .boton-cancelar {
+  border-color: rgb(244 114 182 / 40%);
+  color: #f9a8d4;
+}
+
+app-candy-bar .pedido-acciones button:hover:not(:disabled) {
+  border-color: var(--celeste);
+  background: rgb(34 211 238 / 10%);
+}
+
+app-candy-bar .pedido-acciones button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

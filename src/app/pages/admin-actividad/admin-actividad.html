@@ -1,0 +1,87 @@
+<section class="panel panel-con-acciones">
+  <div class="contenido-panel">
+    <h2>Registro de actividad</h2>
+    <p class="ayuda-gestion">
+      Últimas 500 operaciones del período, con autor y horario de Argentina. El registro se genera
+      en la base y solo lo puede consultar un administrador.
+    </p>
+    <form id="form-actividad" class="form-gestion" (ngSubmit)="consultar()">
+      <div class="campo-gestion">
+        <label for="actividadDesde">Desde (dd/mm/aaaa)</label
+        ><input
+          id="actividadDesde"
+          type="text"
+          inputmode="numeric"
+          placeholder="dd/mm/aaaa"
+          maxlength="10"
+          name="desde"
+          [(ngModel)]="desde"
+          required
+          [disabled]="cargando()"
+        />
+      </div>
+      <div class="campo-gestion">
+        <label for="actividadHasta">Hasta (dd/mm/aaaa)</label
+        ><input
+          id="actividadHasta"
+          type="text"
+          inputmode="numeric"
+          placeholder="dd/mm/aaaa"
+          maxlength="10"
+          name="hasta"
+          [(ngModel)]="hasta"
+          required
+          [disabled]="cargando()"
+        />
+      </div>
+    </form>
+    <p class="estado-carga" role="status" [class.sin-mensaje]="!cargando() && !mensaje()">
+      {{ cargando() ? 'Consultando actividad…' : mensaje() }}
+    </p>
+    <div class="campo-gestion">
+      <label for="buscarActividad">Filtrar por autor, acción o entidad</label
+      ><input
+        id="buscarActividad"
+        type="search"
+        [ngModel]="texto()"
+        (ngModelChange)="texto.set($event)"
+      />
+    </div>
+    <div class="actividad-tabla">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Autor</th>
+            <th>Acción</th>
+            <th>Entidad</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of filtrados(); track a.id) {
+            <tr>
+              <td>{{ a.fecha | date: 'dd/MM/yyyy HH:mm:ss' : '-0300' }}</td>
+              <td>{{ a.autor }}</td>
+              <td>{{ a.accion }}</td>
+              <td>{{ a.entidad }} #{{ a.referencia }}</td>
+              <td>
+                <details>
+                  <summary>Ver cambios</summary>
+                  <p class="detalle-auditoria">{{ cambios(a) }}</p>
+                </details>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5">Sin actividad que coincida con el filtro.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="acciones-gestion pie-panel">
+    <button type="submit" form="form-actividad" [disabled]="cargando()">Consultar</button>
+  </div>
+</section>

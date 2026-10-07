@@ -1,0 +1,88 @@
+<section class="resenas">
+  <header class="resenas-encabezado">
+    <div>
+      <p class="etiqueta">OPINIONES</p>
+      <h2>Reseñas</h2>
+    </div>
+
+    <div class="promedio-resenas">
+      <app-calificacion-estrellas [puntaje]="puntajePromedio() ?? 0"></app-calificacion-estrellas>
+
+      @if (puntajePromedio() !== undefined) {
+        <strong>{{ puntajePromedio() }}/5</strong>
+
+        <span>
+          {{ resenas().length }}
+          {{ resenas().length === 1 ? 'reseña' : 'reseñas' }}
+        </span>
+      } @else {
+        <span>Sin calificaciones</span>
+      }
+    </div>
+  </header>
+
+  @if (usuarioActual(); as usuario) {
+    <form class="formulario-resena" (ngSubmit)="publicar()">
+      <p class="publicando-como">
+        Publicando como:
+        {{ usuario.nombre }} {{ usuario.apellido }}
+      </p>
+
+      <div class="selector-puntaje">
+        <span>Tu calificación</span>
+
+        <app-calificacion-estrellas
+          [puntaje]="nuevoPuntaje"
+          [editable]="true"
+          (puntajeSeleccionado)="nuevoPuntaje = $event"
+        ></app-calificacion-estrellas>
+
+        <strong>{{ nuevoPuntaje }}/5</strong>
+      </div>
+
+      <label for="comentario-resena" class="publicando-como"
+        >Comentario (hasta 300 caracteres)</label
+      >
+      <textarea
+        id="comentario-resena"
+        name="comentario"
+        maxlength="300"
+        placeholder="Escribí tu reseña"
+        [(ngModel)]="nuevoComentario"
+        required
+      ></textarea>
+
+      <button type="submit">Publicar reseña</button>
+    </form>
+  } @else {
+    <p class="aviso-inicio">
+      Para publicar una reseña tenés que
+      <a routerLink="/registro">registrarte</a>.
+    </p>
+  }
+
+  @if (resenas().length > 0) {
+    <div class="lista-resenas">
+      @for (resena of resenas(); track resena.id) {
+        <article class="resena">
+          <div class="encabezado-resena">
+            <strong>
+              {{ resena.nombreUsuario }}
+            </strong>
+
+            <div class="puntaje-resena">
+              <app-calificacion-estrellas [puntaje]="resena.puntaje"></app-calificacion-estrellas>
+
+              <span>{{ resena.puntaje }}/5</span>
+            </div>
+          </div>
+
+          <p>{{ resena.comentario }}</p>
+          <small>{{ resena.fecha }}</small>
+        </article>
+      }
+    </div>
+  } @else {
+    <p class="mensaje-vacio">Esta película todavía no tiene reseñas.</p>
+  }
+</section>
